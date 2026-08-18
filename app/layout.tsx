@@ -39,18 +39,6 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body>
-                {/* Full-site background video */}
-                <video
-                    className="bg-video"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="auto"
-                >
-                    <source src="/imgs/57904-486852810.mp4" type="video/mp4" />
-                </video>
-                <div className="bg-video-overlay" />
                 {children}
             </body>
         </html>

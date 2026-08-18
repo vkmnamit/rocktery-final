@@ -9,6 +9,8 @@ interface Star {
     radius: number;
 }
 
+const SPEED = 6;
+
 const Stars = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -33,7 +35,7 @@ const Stars = () => {
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
                 z: Math.random() * canvas.width,
-                radius: Math.random() * 0.8 + 0.2,
+                radius: Math.random() * 1.2 + 0.3,
             }));
         };
 
@@ -41,7 +43,34 @@ const Stars = () => {
             star.x = Math.random() * canvas.width;
             star.y = Math.random() * canvas.height;
             star.z = canvas.width;
-            star.radius = Math.random() * 0.8 + 0.2;
+            star.radius = Math.random() * 1.2 + 0.3;
+        };
+
+        // Draw a smooth circular star with a soft glow
+        const drawCircleStar = (
+            ctx: CanvasRenderingContext2D,
+            x: number,
+            y: number,
+            radius: number
+        ) => {
+            // Soft outer glow
+            const glow = ctx.createRadialGradient(x, y, 0, x, y, radius * 3);
+            glow.addColorStop(0, "rgba(255, 255, 255, 0.6)");
+            glow.addColorStop(0.4, "rgba(255, 255, 255, 0.25)");
+            glow.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+            ctx.beginPath();
+            ctx.arc(x, y, radius * 3, 0, Math.PI * 2);
+            ctx.fillStyle = glow;
+            ctx.fill();
+
+            // Bright core
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = "white";
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "white";
+            ctx.fill();
         };
 
         const drawStars = () => {
@@ -58,26 +87,13 @@ const Stars = () => {
                 const y = cy + dy * perspective;
                 const radius = star.radius * perspective * 2;
 
-                ctx.beginPath();
-                ctx.arc(x, y, radius, 0, Math.PI * 2);
-                ctx.fillStyle = "white";
-                ctx.shadowBlur = 6;
-                ctx.shadowColor = "white";
-                ctx.fill();
+                drawCircleStar(ctx, x, y, radius);
             });
         };
 
         const updateStars = () => {
-            const cx = canvas.width / 2;
-            const cy = canvas.height / 2;
-
             stars.forEach((star) => {
-                const dx = star.x - cx;
-                const dy = star.y - cy;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                const speed = 5 + dist / 480;
-                star.z -= speed;
+                star.z -= SPEED;
 
                 if (star.z <= 1) {
                     resetStar(star);

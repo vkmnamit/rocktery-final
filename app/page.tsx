@@ -11,28 +11,39 @@ const HERO_LINES = ["Pushing", "Boundaries.", "Defying Gravity With Every Launch
 export default function Home() {
     const heroTitleRef = useRef<HTMLHeadingElement>(null);
     const featureContentRef = useRef<HTMLDivElement>(null);
-    const giantTextRef = useRef<HTMLHeadingElement>(null);
     const [typedLines, setTypedLines] = useState<string[]>(["", "", ""]);
     const [typingDone, setTypingDone] = useState(false);
 
+    // Scroll parallax for giant text (moves left → right as you scroll through section)
     useEffect(() => {
-        const giantText = giantTextRef.current;
+        const giantText = document.querySelector(".giant-text") as HTMLElement | null;
         if (!giantText) return;
 
-        const section = giantText.closest(".giant-text-section");
-        const viewportHeight = window.innerHeight;
+        const section = giantText.closest(".giant-text-section") as HTMLElement | null;
+        if (!section) return;
 
         let ticking = false;
-        let rafId = 0;
 
         const updateTransform = () => {
-            if (giantText && section) {
-                const rect = section.getBoundingClientRect();
-                if (rect.top < viewportHeight && rect.bottom > 0) {
-                    const progress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
-                    const clamped = Math.max(0, Math.min(1, progress));
-                    const translateX = -60 + clamped * 120;
-                    giantText.style.transform = `translate3d(${translateX}%, 0, 0)`;
+            const viewportHeight = window.innerHeight;
+            const rect = section.getBoundingClientRect();
+
+            if (rect.top < viewportHeight && rect.bottom > 0) {
+                // Progress from 0 (section top hits viewport bottom) to 1 (section bottom hits viewport top)
+                const progress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
+                const clamped = Math.max(0, Math.min(1, progress));
+                // Map progress to x from -900px (left) to 900px (right) - faster movement
+                const translateX = -900 + clamped * 1800;
+                giantText.style.transform = `translate3d(${translateX}px, 0, 0)`;
+
+                // Fade out the giant text as it scrolls past (smooth transition to About section)
+                if (clamped > 0.75) {
+                    const fadeProgress = (clamped - 0.75) / 0.25;
+                    giantText.style.opacity = String(1 - fadeProgress);
+                    giantText.style.filter = `blur(${fadeProgress * 8}px)`;
+                } else {
+                    giantText.style.opacity = "1";
+                    giantText.style.filter = "blur(0px)";
                 }
             }
             ticking = false;
@@ -40,19 +51,18 @@ export default function Home() {
 
         const handleScroll = () => {
             if (!ticking) {
-                rafId = requestAnimationFrame(updateTransform);
                 ticking = true;
+                requestAnimationFrame(updateTransform);
             }
         };
 
         window.addEventListener("scroll", handleScroll, { passive: true });
-        window.addEventListener("resize", updateTransform);
+        window.addEventListener("resize", handleScroll);
         updateTransform();
 
         return () => {
             window.removeEventListener("scroll", handleScroll);
-            window.removeEventListener("resize", updateTransform);
-            if (rafId) cancelAnimationFrame(rafId);
+            window.removeEventListener("resize", handleScroll);
         };
     }, []);
 
@@ -185,9 +195,7 @@ export default function Home() {
                 </div>
 
                 <section className="giant-text-section">
-                    <h1 ref={giantTextRef} className="giant-text">
-                        BMSCE ROCKETRY
-                    </h1>
+                    <h1 className="giant-text">BMSCE ROCKETRY</h1>
                 </section>
 
                 <AboutUs />
