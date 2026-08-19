@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import PageTransition from "@/components/PageTransition";
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://bscerocketry.in"),
@@ -39,7 +40,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body>
-                {children}
+                <PageTransition>{children}</PageTransition>
             </body>
         </html>
     );

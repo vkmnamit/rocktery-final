@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import styles from "./CinematicScroll.module.css";
+import useSlowScroll from "@/hooks/useSlowScroll";
 
 const slides = [
     {
@@ -68,6 +69,9 @@ export default function CinematicScroll() {
     const countersRef = useRef<(HTMLSpanElement | null)[]>([]);
     const leftCurtainRef = useRef<HTMLDivElement>(null);
     const rightCurtainRef = useRef<HTMLDivElement>(null);
+
+    // Slow scroll inside the sticky section
+    useSlowScroll(sectionRef, 0.35);
 
     useEffect(() => {
         let target = 0;

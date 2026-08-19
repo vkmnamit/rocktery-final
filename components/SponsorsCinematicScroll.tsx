@@ -2,11 +2,13 @@
 
 import React, { useEffect, useRef } from "react";
 import styles from "./SponsorsCinematicScroll.module.css";
+import useSlowScroll from "@/hooks/useSlowScroll";
 
 const slides = [
     {
         image: "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2400&q=95",
         reveal: "bottom",
+        side: "left",
         texts: [
             { title: "DISCOVER", description: "A visual journey through distant landscapes.", position: "posBottomLeft" },
             { title: "THE JOURNEY", description: "Every road begins with a single decision.", position: "posTopRight" },
@@ -18,6 +20,7 @@ const slides = [
     {
         image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=2400&q=95",
         reveal: "diagonal",
+        side: "right",
         texts: [
             { title: "CITY", description: "Architecture creates the rhythm of a city.", position: "posTopLeft" },
             { title: "MOTION", description: "Thousands of stories moving at once.", position: "posCenterRight" },
@@ -29,6 +32,7 @@ const slides = [
     {
         image: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=2400&q=95",
         reveal: "vertical",
+        side: "left",
         texts: [
             { title: "TIMELESS", description: "History remains visible in every detail.", position: "posCenterLeft" },
             { title: "MEMORY", description: "Some places feel familiar before you arrive.", position: "posTopRight" },
@@ -40,6 +44,7 @@ const slides = [
     {
         image: "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=2400&q=95",
         reveal: "horizontal",
+        side: "right",
         texts: [
             { title: "ENDLESS", description: "Open roads and distant horizons.", position: "posBottomRight" },
             { title: "FORWARD", description: "Keep moving even when the destination is unknown.", position: "posTopLeft" },
@@ -51,6 +56,7 @@ const slides = [
     {
         image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2400&q=95",
         reveal: "organic",
+        side: "left",
         texts: [
             { title: "UNKNOWN", description: "The best destinations are often unexpected.", position: "posTopRight" },
             { title: "EXPLORE", description: "Step outside what you already know.", position: "posBottomLeft" },
@@ -62,6 +68,7 @@ const slides = [
     {
         image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=2400&q=95",
         reveal: "right",
+        side: "right",
         texts: [
             { title: "ESCAPE", description: "Leave the familiar behind.", position: "posTopLeft" },
             { title: "SILENCE", description: "Sometimes silence says more than words.", position: "posBottomRight" },
@@ -73,6 +80,7 @@ const slides = [
     {
         image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2400&q=95",
         reveal: "center",
+        side: "left",
         texts: [
             { title: "ARRIVE", description: "Every journey eventually finds its moment.", position: "posBottomLeft" },
             { title: "REFLECT", description: "Look back at everything you have crossed.", position: "posTopRight" },
@@ -91,6 +99,8 @@ export default function SponsorsCinematicScroll() {
     const leftCurtainRef = useRef<HTMLDivElement>(null);
     const rightCurtainRef = useRef<HTMLDivElement>(null);
 
+    // Slow scroll inside the sticky section
+    useSlowScroll(sectionRef, 0.35);
     useEffect(() => {
         let target = 0;
         let smooth = 0;
@@ -160,27 +170,32 @@ export default function SponsorsCinematicScroll() {
             const revealEnd = 0.78;
             const revealProgress = Math.min(local / revealEnd, 1);
 
-            // Images
+            // Images — only ONE shown at a time
             imageLayersRef.current.forEach((layer, index) => {
                 if (!layer) return;
 
                 if (index < slideIndex) {
-                    layer.style.zIndex = String(10 + index);
+                    // PREVIOUS: hide completely so they don't stack
+                    layer.style.zIndex = "1";
+                    layer.style.opacity = "0";
                     layer.style.clipPath = getReveal(slides[index].reveal, 1);
-                    const img = layer.querySelector("img");
-                    if (img) img.style.transform = "scale(1)";
                 } else if (index === slideIndex) {
+                    // CURRENT: reveal with animation
                     layer.style.zIndex = "100";
+                    layer.style.opacity = "1";
                     layer.style.clipPath = getReveal(slides[index].reveal, revealProgress);
-                    
+
                     const img = layer.querySelector("img");
                     const zoom = 1.10 - ease(revealProgress) * 0.10;
                     if (img) img.style.transform = `scale(${zoom})`;
                 } else {
+                    // FUTURE: hidden, no clip
                     layer.style.zIndex = "1";
+                    layer.style.opacity = "0";
                     layer.style.clipPath = getReveal(slides[index].reveal, 0);
                 }
             });
+
 
             // Texts
             const textCount = slides[slideIndex].texts.length;
