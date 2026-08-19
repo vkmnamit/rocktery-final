@@ -1,0 +1,177 @@
+.scrollSection {
+    height: 1400vh;
+    position: relative;
+    background: #000;
+}
+
+.sticky {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+}
+
+.imageStack {
+    position: absolute;
+    inset: 0;
+}
+
+.imageLayer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    clip-path: circle(0% at 50% 50%);
+    will-change: clip-path;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.imageLayer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform: scale(1.12);
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+.imageLayer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(90deg, rgba(0,0,0,.45), transparent 50%, rgba(0,0,0,.32)),
+        linear-gradient(0deg, rgba(0,0,0,.65), transparent 60%);
+    pointer-events: none;
+}
+
+.curtain {
+    position: absolute;
+    top: -5%;
+    width: 53%;
+    height: 110%;
+    z-index: 500;
+    background: repeating-linear-gradient(90deg, #020202 0px, #111 13px, #030303 27px, #171717 43px, #010101 60px);
+    box-shadow: inset 0 0 120px rgba(0,0,0,.95), 0 0 80px rgba(0,0,0,.9);
+    pointer-events: none;
+    will-change: transform;
+}
+
+.curtain.left {
+    left: 0;
+}
+
+.curtain.right {
+    right: 0;
+}
+
+.curtain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(90deg, transparent 0, rgba(255,255,255,.025) 12px, transparent 25px, rgba(0,0,0,.5) 42px);
+}
+
+/* Removed .logo and .nav since we use global Navbar */
+
+.storyLayer {
+    position: absolute;
+    inset: 0;
+    z-index: 600;
+    pointer-events: none;
+}
+
+.storyItem {
+    position: absolute;
+    width: 300px;
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(35px) scale(.96);
+    transition: opacity .7s cubic-bezier(.16,1,.3,1), transform 1s cubic-bezier(.16,1,.3,1), filter .9s cubic-bezier(.16,1,.3,1);
+}
+
+.storyItem.visible {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+}
+
+.posTopLeft { left: 7%; top: 20%; }
+.posTopRight { right: 7%; top: 20%; }
+.posCenterLeft { left: 8%; top: 50%; transform: translateY(-50%) translateY(35px) scale(.96); }
+.posCenterRight { right: 8%; top: 50%; transform: translateY(-50%) translateY(35px) scale(.96); }
+.posBottomLeft { left: 7%; bottom: 14%; }
+.posBottomRight { right: 7%; bottom: 14%; }
+.posCenter { left: 50%; top: 50%; transform: translate(-50%,-50%) translateY(35px) scale(.96); }
+
+.storyItem.visible.posCenterLeft { transform: translateY(-50%) scale(1); }
+.storyItem.visible.posCenterRight { transform: translateY(-50%) scale(1); }
+.storyItem.visible.posCenter { transform: translate(-50%,-50%) scale(1); }
+
+.storyNumber {
+    font-size: 9px;
+    letter-spacing: 5px;
+    opacity: .55;
+    margin-bottom: 15px;
+}
+
+.storyTitle {
+    font-size: clamp(32px, 4vw, 68px);
+    font-weight: 300;
+    line-height: .9;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+}
+
+.storyDescription {
+    font-size: 10px;
+    line-height: 1.8;
+    letter-spacing: 1px;
+    max-width: 290px;
+    opacity: .7;
+}
+
+.counter {
+    position: absolute;
+    right: 6%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 700;
+}
+
+.counter span {
+    display: block;
+    margin: 15px 0;
+    font-size: 10px;
+    letter-spacing: 3px;
+    opacity: .2;
+    transition: opacity .5s ease, transform .6s cubic-bezier(.16,1,.3,1);
+}
+
+.counter span.active {
+    opacity: 1;
+    transform: translateX(-8px);
+}
+
+.scrollLabel {
+    position: absolute;
+    right: 6%;
+    bottom: 8%;
+    z-index: 700;
+    writing-mode: vertical-rl;
+    font-size: 9px;
+    letter-spacing: 4px;
+    opacity: .45;
+}
+
+@media(max-width:700px) {
+    .nav { display: none; }
+    .storyItem { width: 230px; }
+    .storyTitle { font-size: 35px; }
+}

@@ -1,0 +1,122 @@
+.container {
+    display: flex;
+    width: 100%;
+    position: relative;
+    background-color: #F0EBE1; /* Beige background from screenshots */
+    color: #111;
+}
+
+/* LEFT COLUMN - Scrolls normally */
+.textColumn {
+    width: 50%;
+    padding: 0 5%;
+}
+
+.textBlock {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px 0;
+}
+
+.textBlock h2 {
+    font-size: clamp(2rem, 4vw, 4rem);
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 90%;
+    margin-bottom: 30px;
+}
+
+.meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #555;
+    font-weight: 600;
+}
+
+.meta span {
+    border-bottom: 1px solid #aaa;
+    padding-bottom: 2px;
+}
+
+/* RIGHT COLUMN - Sticky */
+.imageColumn {
+    width: 50%;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5%;
+}
+
+.imageContainer {
+    width: 100%;
+    height: 80%;
+    position: relative;
+    overflow: hidden;
+    /* Optional: add some background or border if you want a frame */
+    /* background: #ddd; */
+}
+
+.imageLayer {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: scale(0.95); /* Slight scale for a subtle zoom-in effect */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.imageLayer.active {
+    opacity: 1;
+    transform: scale(1);
+    z-index: 10;
+}
+
+.imageLayer img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Keep the transparent PNGs fully visible */
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    .textColumn {
+        width: 100%;
+        padding: 0 5%;
+    }
+    .textBlock {
+        min-height: 50vh;
+        padding: 50px 0;
+    }
+    .imageColumn {
+        width: 100%;
+        height: 50vh;
+        position: sticky;
+        top: 60px; /* Below navbar */
+        padding: 0 5%;
+        margin-bottom: 50px;
+        z-index: -1; /* Push to back if needed, but sticky on top works */
+    }
+    .imageContainer {
+        height: 100%;
+    }
+}
