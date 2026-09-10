@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap');
+@import 'tailwindcss';
+
+:root {
+  --cream: #f0ece3;
+  --black: #181818;
+  --grey: #8d8983;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: "DM Sans", sans-serif;
+  background: var(--cream);
+  color: var(--black);
+  overflow-x: hidden;
+}
+
+/* Hide scrollbar visually while keeping scroll */
+::-webkit-scrollbar { width: 0; }
+
+html { scroll-behavior: smooth; }

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 /* =====================================================
-   PROJECTS DATA  (your content)
+   PROJECTS DATA
 ===================================================== */
 const projects = [
     {
@@ -11,11 +11,12 @@ const projects = [
         label:       "High-Power Rocketry",
         name:        "AURORA",
         status:      "Active",
-        description: "Aurora represents our most ambitious build to date — a full-scale two-stage high-power rocket designed for the 10,000 ft AGL category. Engineered for precision, this is BSCE Rocketry's flagship programme.",
+        description: "Aurora represents our most ambitious build to date — a full-scale two-stage high-power rocket designed for the 10,000 ft AGL category. Engineered for precision, this is BMSCE Rocketry's flagship programme.",
         image:       "/imgs/1.png",
-        bgOld:       "#f0ece6",   /* cream  ← section starts on this */
-        bgNew:       "#19191b",   /* black  ← circle expands to this  */
+        bgOld:       "#f0ece6",
+        bgNew:       "#19191b",
         color:       "#f0ece6",
+        imgFirst:    true,
         stats: [
             { label: "Target Altitude", value: "10,000 ft" },
             { label: "Max Speed",       value: "Mach 0.9"  },
@@ -32,6 +33,7 @@ const projects = [
         bgOld:       "#19191b",
         bgNew:       "#f0ece6",
         color:       "#19191b",
+        imgFirst:    false,
         stats: [
             { label: "Peak Altitude", value: "7,500 ft" },
             { label: "Max Speed",     value: "Mach 1.1" },
@@ -48,6 +50,7 @@ const projects = [
         bgOld:       "#f0ece6",
         bgNew:       "#19191b",
         color:       "#f0ece6",
+        imgFirst:    true,
         stats: [
             { label: "Target Altitude", value: "30,000 ft" },
             { label: "Payload Bay",     value: "4 kg"      },
@@ -64,6 +67,7 @@ const projects = [
         bgOld:       "#19191b",
         bgNew:       "#f0ece6",
         color:       "#19191b",
+        imgFirst:    false,
         stats: [
             { label: "Propellants", value: "LOX / IPA" },
             { label: "Thrust",      value: "500 N"     },
@@ -76,7 +80,7 @@ const projects = [
    EASE
 ===================================================== */
 function easeInOutCubic(x: number) {
-    return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x+2, 3)/2;
+    return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 }
 
 /* =====================================================
@@ -85,66 +89,77 @@ function easeInOutCubic(x: number) {
 export default function ProjectsLayout() {
 
     useEffect(() => {
-        const transitions =
-            document.querySelectorAll<HTMLElement>(".ekl-transition-section");
+        const sections =
+            document.querySelectorAll<HTMLElement>(".prj-transition-section");
 
-        function updateTransitions() {
-            transitions.forEach((section) => {
+        function update() {
+            sections.forEach((section) => {
+                const rect       = section.getBoundingClientRect();
+                const scrollDist = section.offsetHeight - window.innerHeight;
+                const p          = Math.max(0, Math.min(1, -rect.top / scrollDist));
 
-                const rect         = section.getBoundingClientRect();
-                const scrollDist   = section.offsetHeight - window.innerHeight;
-                let   progress     = -rect.top / scrollDist;
-                progress           = Math.max(0, Math.min(1, progress));
+                const reveal = section.querySelector<HTMLElement>(".prj-reveal-layer");
+                const img    = section.querySelector<HTMLElement>(".prj-new-image");
+                const txt    = section.querySelector<HTMLElement>(".prj-new-text");
+                if (!reveal || !img || !txt) return;
 
-                const expandingColor = section.querySelector<HTMLElement>(".ekl-expanding-color");
-                const image          = section.querySelector<HTMLElement>(".ekl-new-image");
-                const text           = section.querySelector<HTMLElement>(".ekl-new-text");
+                // ── Phase 1: 0→60% scroll — circle grows from BOTTOM-CENTER ──
+                //
+                // Use PIXEL coords so there is zero ambiguity about where
+                // 50%/100% resolves.  We read the element's actual dimensions,
+                // put the clip-path center at (w/2, h) in pixels
+                // = exact bottom-center of the sticky viewport, then grow
+                // the radius from 0 to the diagonal length (farthest corner).
+                const sticky  = section.querySelector<HTMLElement>(".prj-sticky-page");
+                if (!sticky) return;
+                const w       = sticky.offsetWidth;
+                const h       = sticky.offsetHeight;
+                const cx      = w / 2;                           // horizontal center
+                const cy      = h;                               // BOTTOM of element
+                const maxR    = Math.hypot(cx, h) + 20;         // diagonal + margin
+                const cp      = easeInOutCubic(Math.max(0, Math.min(1, p / 0.60)));
+                const radius  = cp * maxR;
+                reveal.style.clipPath = `circle(${radius}px at ${cx}px ${cy}px)`;
 
-                if (!expandingColor || !image || !text) return;
+                // ── Phase 2: 60→80% — image rises up ──
+                const ip = easeInOutCubic(Math.max(0, Math.min(1, (p - 0.60) / 0.20)));
+                img.style.opacity   = String(ip);
+                img.style.transform = `translateY(${(1 - ip) * 90}px) scale(${0.88 + ip * 0.12})`;
 
-                /* PHASE 1 — 0 → 58% — expanding colour */
-                let colorProgress = progress / 0.58;
-                colorProgress = Math.max(0, Math.min(1, colorProgress));
-                colorProgress = easeInOutCubic(colorProgress);
-                const scale = 0.015 + colorProgress * 1.08;
-                expandingColor.style.transform = `translateX(-50%) scale(${scale})`;
-
-                /* PHASE 2 — 58 → 78% — image appears */
-                let imageProgress = (progress - 0.58) / 0.20;
-                imageProgress = Math.max(0, Math.min(1, imageProgress));
-                imageProgress = easeInOutCubic(imageProgress);
-                image.style.opacity   = String(imageProgress);
-                image.style.transform = `translateY(${100 - imageProgress*100}px) scale(${0.88 + imageProgress*0.12})`;
-
-                /* PHASE 3 — 74 → 100% — text appears */
-                let textProgress = (progress - 0.74) / 0.26;
-                textProgress = Math.max(0, Math.min(1, textProgress));
-                textProgress = easeInOutCubic(textProgress);
-                text.style.opacity   = String(textProgress);
-                text.style.transform = `translateY(${70 - textProgress*70}px)`;
+                // ── Phase 3: 75→100% — text fades up ──
+                const tp = easeInOutCubic(Math.max(0, Math.min(1, (p - 0.75) / 0.25)));
+                txt.style.opacity   = String(tp);
+                txt.style.transform = `translateY(${(1 - tp) * 65}px)`;
             });
         }
 
-        window.addEventListener("scroll",  updateTransitions, { passive: true });
-        window.addEventListener("load",    updateTransitions);
-        window.addEventListener("resize",  updateTransitions);
-        updateTransitions();
+        window.addEventListener("scroll",  update, { passive: true });
+        window.addEventListener("resize",  update, { passive: true });
+        window.addEventListener("load",    update);
+        update();
 
         return () => {
-            window.removeEventListener("scroll",  updateTransitions);
-            window.removeEventListener("load",    updateTransitions);
-            window.removeEventListener("resize",  updateTransitions);
+            window.removeEventListener("scroll",  update);
+            window.removeEventListener("resize",  update);
+            window.removeEventListener("load",    update);
         };
     }, []);
 
     return (
         <>
-            <style>{`
-                /* ── global resets for this page ── */
-                .ekl-page { font-family: "DM Sans", sans-serif; overflow-x: hidden; }
+            <style dangerouslySetInnerHTML={{ __html: `
+                @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+
+                /* ── page ── */
+                .prj-page {
+                    font-family: "DM Sans", sans-serif;
+                    overflow-x: hidden;
+                    background: #f0ece6;
+                    color: #19191b;
+                }
 
                 /* ── HERO ── */
-                .ekl-hero {
+                .prj-hero {
                     height: 100vh;
                     position: relative;
                     display: flex;
@@ -153,31 +168,31 @@ export default function ProjectsLayout() {
                     background: #f0ece6;
                     overflow: hidden;
                 }
-                .ekl-hero-content {
+                .prj-hero-content {
                     width: 100%;
                     position: relative;
                     text-align: center;
                 }
-                .ekl-hero-title {
+                .prj-hero-title {
                     font-size: clamp(65px, 10vw, 180px);
                     line-height: .84;
                     letter-spacing: -.085em;
                     font-weight: 700;
                     color: #19191b;
                 }
-                .ekl-hero-line {
+                .prj-hero-line {
                     display: block;
                     opacity: 0;
                     transform: translateY(70px);
-                    animation: eklHeroText 1s cubic-bezier(.22,1,.36,1) forwards;
+                    animation: prjHeroText 1s cubic-bezier(.22,1,.36,1) forwards;
                 }
-                .ekl-hero-line:nth-child(1){ animation-delay: .1s; }
-                .ekl-hero-line:nth-child(2){ animation-delay: .3s; }
-                .ekl-hero-line:nth-child(3){ animation-delay: .5s; }
-                @keyframes eklHeroText {
+                .prj-hero-line:nth-child(1) { animation-delay: .1s; }
+                .prj-hero-line:nth-child(2) { animation-delay: .3s; }
+                .prj-hero-line:nth-child(3) { animation-delay: .5s; }
+                @keyframes prjHeroText {
                     to { opacity: 1; transform: translateY(0); }
                 }
-                .ekl-hero-image {
+                .prj-hero-image {
                     position: absolute;
                     top: 50%; left: 50%;
                     transform: translate(-50%,-50%) translateY(50px) scale(.8);
@@ -186,23 +201,22 @@ export default function ProjectsLayout() {
                     border-radius: 40px;
                     overflow: hidden;
                     opacity: 0;
-                    animation: eklHeroImage 1s cubic-bezier(.22,1,.36,1) forwards;
-                    animation-delay: 1s;
+                    animation: prjHeroImage 1s cubic-bezier(.22,1,.36,1) 1s forwards;
                     z-index: 3;
                 }
-                .ekl-hero-image img {
+                .prj-hero-image img {
                     width: 100%; height: 100%;
                     object-fit: cover;
-                    animation: eklZoom 8s ease-in-out infinite alternate;
+                    animation: prjZoom 8s ease-in-out infinite alternate;
                 }
-                @keyframes eklHeroImage {
+                @keyframes prjHeroImage {
                     to { opacity:1; transform: translate(-50%,-50%) translateY(0) scale(1); }
                 }
-                @keyframes eklZoom {
+                @keyframes prjZoom {
                     from { transform: scale(1); }
                     to   { transform: scale(1.15); }
                 }
-                .ekl-scroll-hint {
+                .prj-scroll-hint {
                     position: absolute;
                     bottom: 35px; left: 50%;
                     transform: translateX(-50%);
@@ -211,92 +225,125 @@ export default function ProjectsLayout() {
                     text-transform: uppercase;
                     opacity: .55;
                     color: #19191b;
+                    animation: prjPulse 2.5s ease-in-out 2s infinite;
+                }
+                @keyframes prjPulse {
+                    0%, 100% { opacity: .3; }
+                    50%      { opacity: .65; }
+                }
+
+                /* Orbit rings decoration */
+                .prj-ring {
+                    position: absolute;
+                    border-radius: 50%;
+                    border: 1px solid rgba(25,25,27,0.06);
+                    top: 50%; left: 50%;
+                    transform: translate(-50%,-50%);
+                    animation: prjRotate 30s linear infinite;
+                    pointer-events: none;
+                }
+                .prj-ring-2 { animation-duration: 20s; animation-direction: reverse; }
+                @keyframes prjRotate {
+                    from { transform: translate(-50%,-50%) rotate(0deg); }
+                    to   { transform: translate(-50%,-50%) rotate(360deg); }
                 }
 
                 /* ── TRANSITION SECTION ── */
-                .ekl-transition-section {
+                .prj-transition-section {
                     height: 320vh;
                     position: relative;
                 }
-                .ekl-sticky-page {
+                .prj-sticky-page {
                     position: sticky;
                     top: 0;
                     width: 100%;
                     height: 100vh;
                     overflow: hidden;
                 }
-                .ekl-current-background {
+                /* Old background — always fully visible behind the reveal layer */
+                .prj-bg {
                     position: absolute;
                     inset: 0;
                     z-index: 1;
                 }
-                .ekl-expanding-color {
+                /*
+                 * Reveal layer — the entire new-page world lives here.
+                 * clip-path clips it to the expanding circle shape.
+                 * At progress=0 → clip-path: circle(0% ...) — nothing visible.
+                 * As scroll grows → circle expands until it covers the screen.
+                 * The clip origin is bottom-center of the viewport.
+                 */
+                .prj-reveal-layer {
                     position: absolute;
-                    width: 260vmax;
-                    height: 260vmax;
-                    left: 50%;
-                    bottom: -130vmax;
-                    border-radius: 50%;
-                    transform: translateX(-50%) scale(.015);
-                    transform-origin: center;
+                    inset: 0;
                     z-index: 2;
-                    will-change: transform;
+                    /* Start fully clipped (invisible) */
+                    clip-path: circle(0vmax at 50% 100%);
+                    will-change: clip-path;
+                    overflow: hidden;
+                }
+                /* New solid background fill inside the reveal layer */
+                .prj-reveal-bg {
+                    position: absolute;
+                    inset: 0;
+                    z-index: 1;
                 }
 
-                /* ── NEW CONTENT ── */
-                .ekl-new-content {
-                    position: relative;
-                    width: 100%; height: 100%;
-                    z-index: 5;
+                /* ── CONTENT GRID (lives inside .prj-reveal-layer) ── */
+                .prj-content {
+                    position: absolute;
+                    inset: 0;
+                    z-index: 2;
                     display: grid;
                     grid-template-columns: 1fr 1fr;
                     align-items: center;
                     gap: 8vw;
                     padding: 100px 8vw;
                 }
-                .ekl-new-image {
+                .prj-new-image {
                     width: 100%;
                     height: min(65vh, 560px);
                     border-radius: 35px;
                     overflow: hidden;
                     opacity: 0;
-                    transform: translateY(100px) scale(.88);
+                    transform: translateY(90px) scale(.88);
                     will-change: transform, opacity;
                 }
-                .ekl-new-image img {
+                .prj-new-image img {
                     width: 100%; height: 100%;
                     object-fit: contain;
                 }
-                .ekl-new-text {
+                .prj-new-text {
                     opacity: 0;
-                    transform: translateY(70px);
+                    transform: translateY(65px);
                     will-change: opacity, transform;
                 }
-                .ekl-label {
+                .prj-label {
                     font-size: 12px;
                     letter-spacing: .2em;
                     margin-bottom: 28px;
                     text-transform: uppercase;
                     opacity: .55;
                 }
-                .ekl-new-text h2 {
+                .prj-new-text h2 {
+                    font-family: "Instrument Serif", serif;
                     font-size: clamp(55px, 7vw, 125px);
                     line-height: .88;
                     letter-spacing: -.075em;
-                    font-weight: 700;
+                    font-weight: 400;
                     margin-bottom: 28px;
                 }
-                .ekl-description {
+                .prj-description {
                     font-size: 18px;
                     line-height: 1.7;
                     max-width: 540px;
                     opacity: .7;
                     margin-bottom: 40px;
                 }
-                .ekl-feature-list {
+                .prj-feature-list {
                     border-top: 1px solid currentColor;
                 }
-                .ekl-feature {
+                .prj-feature {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
@@ -305,18 +352,19 @@ export default function ProjectsLayout() {
                     font-size: 17px;
                     gap: 12px;
                 }
-                .ekl-feature-val {
+                .prj-feature-val {
                     font-weight: 700;
                     flex: 1;
                     text-align: right;
+                    margin-right: 16px;
                 }
-                .ekl-feature span:last-child {
+                .prj-feature-num {
                     font-size: 12px;
-                    opacity: .5;
+                    opacity: .45;
                     min-width: 22px;
                     text-align: right;
                 }
-                .ekl-status-row {
+                .prj-status-row {
                     display: flex;
                     align-items: center;
                     gap: 8px;
@@ -326,18 +374,18 @@ export default function ProjectsLayout() {
                     opacity: .6;
                     margin-top: 20px;
                 }
-                .ekl-dot {
+                .prj-dot {
                     width: 7px; height: 7px;
                     border-radius: 50%;
                     background: currentColor;
                     opacity: .35;
                 }
-                .ekl-dot-active {
+                .prj-dot-active {
                     background: #5fff9a !important;
                     opacity: 1 !important;
                     box-shadow: 0 0 8px rgba(95,255,154,.55);
                 }
-                .ekl-ghost-num {
+                .prj-ghost-num {
                     position: absolute;
                     bottom: -20px; right: 5vw;
                     font-size: clamp(80px, 12vw, 180px);
@@ -351,171 +399,196 @@ export default function ProjectsLayout() {
                 }
 
                 /* ── FINAL SECTION ── */
-                .ekl-final-section {
+                .prj-final {
                     min-height: 100vh;
                     background: #f0ece6;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     text-align: center;
-                    padding: 80px 20px;
+                    padding: 80px 5vw;
+                    flex-direction: column;
                     color: #19191b;
                 }
-                .ekl-final-section h2 {
-                    font-size: clamp(70px, 11vw, 190px);
-                    line-height: .85;
-                    letter-spacing: -.09em;
-                    font-weight: 700;
-                    margin-bottom: 28px;
+                .prj-final-eyebrow {
+                    font-size: 12px;
+                    letter-spacing: .2em;
+                    text-transform: uppercase;
+                    opacity: .4;
+                    margin-bottom: 40px;
                 }
-                .ekl-final-section p {
-                    font-size: 20px;
-                    opacity: .65;
-                    margin-bottom: 35px;
+                .prj-final h2 {
+                    font-family: "Instrument Serif", serif;
+                    font-size: clamp(72px, 12vw, 200px);
+                    line-height: .84;
+                    letter-spacing: -.085em;
+                    font-weight: 400;
+                    margin-bottom: 36px;
                 }
-                .ekl-final-btn {
+                .prj-final p {
+                    font-size: 19px;
+                    opacity: .6;
+                    max-width: 480px;
+                    line-height: 1.65;
+                    margin-bottom: 48px;
+                }
+                .prj-final-btn {
                     display: inline-block;
-                    border: none;
-                    padding: 17px 32px;
+                    padding: 18px 38px;
                     border-radius: 100px;
                     background: #19191b;
                     color: #f0ece6;
                     font-size: 15px;
+                    font-weight: 600;
+                    letter-spacing: .04em;
                     cursor: pointer;
+                    border: none;
                     text-decoration: none;
-                    transition: opacity .25s;
+                    transition: opacity .25s, transform .25s;
                 }
-                .ekl-final-btn:hover { opacity: .75; }
+                .prj-final-btn:hover { opacity: .8; transform: translateY(-2px); }
+                .prj-final-footer {
+                    margin-top: 100px;
+                    font-size: 13px;
+                    opacity: .28;
+                    letter-spacing: .1em;
+                }
 
                 /* ── MOBILE ── */
-                @media (max-width: 850px) {
-                    .ekl-new-content {
+                @media (max-width: 860px) {
+                    .prj-content {
                         grid-template-columns: 1fr;
-                        padding: 90px 30px 40px;
-                        gap: 30px;
+                        padding: 90px 28px 40px;
+                        gap: 32px;
                     }
-                    .ekl-new-image { height: 38vh; min-height: 260px; }
-                    .ekl-new-text h2 { font-size: 54px; }
-                    .ekl-transition-section { height: 280vh; }
-                    .ekl-ghost-num { display: none; }
+                    .prj-new-image { height: 38vh; min-height: 260px; }
+                    .prj-new-text h2 { font-size: 54px; }
+                    .prj-transition-section { height: 280vh; }
+                    .prj-ghost-num { display: none; }
                 }
-            `}</style>
+            ` }} />
 
-            <div className="ekl-page">
+            <div className="prj-page">
 
-                {/* =====================================================
-                    HERO
-                ===================================================== */}
-                <section className="ekl-hero">
+                {/* ── HERO ── */}
+                <section className="prj-hero">
+                    {/* Decorative orbit rings */}
+                    <div className="prj-ring"  style={{ width: "min(60vw,560px)", height: "min(60vw,560px)" }} />
+                    <div className="prj-ring prj-ring-2" style={{ width: "min(40vw,380px)", height: "min(40vw,380px)" }} />
 
-                    <div className="ekl-hero-content">
-
-                        <h1 className="ekl-hero-title">
-                            <span className="ekl-hero-line">The Rockets Were</span>
-                            <span className="ekl-hero-line">Never Built</span>
-                            <span className="ekl-hero-line">For You</span>
+                    <div className="prj-hero-content">
+                        <h1 className="prj-hero-title">
+                            <span className="prj-hero-line">We Build</span>
+                            <span className="prj-hero-line">
+                                <em style={{ fontFamily: '"Instrument Serif", serif', fontStyle: "italic", fontWeight: 400 }}>Rockets.</em>
+                            </span>
+                            <span className="prj-hero-line">From Scratch.</span>
                         </h1>
 
-                        <div className="ekl-hero-image">
-                            <img src="/imgs/1.png" alt="BSCE Rocket" />
+                        <div className="prj-hero-image">
+                            <img src="/imgs/1.png" alt="BMSCE Rocket" />
                         </div>
-
                     </div>
 
-                    <div className="ekl-scroll-hint">Scroll to explore</div>
-
+                    <div className="prj-scroll-hint">Scroll to explore</div>
                 </section>
 
 
-                {/* =====================================================
-                    TRANSITION SECTIONS  — one per project
-                ===================================================== */}
-                {projects.map((project, i) => (
+                {/* ── TRANSITION SECTIONS — one per project ── */}
+                {projects.map((proj, i) => (
                     <section
-                        key={project.id}
-                        id={project.id}
-                        className="ekl-transition-section"
+                        key={proj.id}
+                        id={proj.id}
+                        className="prj-transition-section"
                     >
-                        <div className="ekl-sticky-page">
+                        <div className="prj-sticky-page">
 
-                            {/* OLD PAGE COLOUR */}
-                            <div
-                                className="ekl-current-background"
-                                style={{ background: project.bgOld }}
-                            />
+                            {/* ── OLD BACKGROUND — visible beneath the circle ── */}
+                            <div className="prj-bg" style={{ background: proj.bgOld }} />
 
-                            {/* EXPANDING CIRCLE */}
-                            <div
-                                className="ekl-expanding-color"
-                                style={{ background: project.bgNew }}
-                            />
+                            {/*
+                             * ── REVEAL LAYER ──
+                             * clip-path is driven by scroll: starts as circle(0%) at
+                             * bottom-center, expands until it covers the whole screen.
+                             * Everything new (bg, image, text) lives inside here so
+                             * nothing shows until the circle has grown over it.
+                             */}
+                            <div className="prj-reveal-layer">
 
-                            {/* NEW CONTENT */}
-                            <div
-                                className="ekl-new-content"
-                                style={{ color: project.color }}
-                            >
-                                {/* IMAGE LEFT */}
-                                <div className="ekl-new-image">
-                                    <img src={project.image} alt={project.name} />
+                                {/* New solid background fill */}
+                                <div className="prj-reveal-bg" style={{ background: proj.bgNew }} />
+
+                                {/* CONTENT GRID */}
+                                <div className="prj-content" style={{ color: proj.color }}>
+
+                                    {/* IMAGE */}
+                                    <div
+                                        className="prj-new-image"
+                                        style={{ order: proj.imgFirst ? 0 : 2 }}
+                                    >
+                                        <img src={proj.image} alt={proj.name} />
+                                    </div>
+
+                                    {/* TEXT */}
+                                    <div className="prj-new-text" style={{ order: 1 }}>
+                                        <div className="prj-label">{proj.label}</div>
+
+                                        <h2>{proj.name}</h2>
+
+                                        <p className="prj-description">{proj.description}</p>
+
+                                        <div className="prj-feature-list">
+                                            {proj.stats.map((s, si) => (
+                                                <div className="prj-feature" key={s.label}>
+                                                    {s.label}
+                                                    <span className="prj-feature-val">{s.value}</span>
+                                                    <span className="prj-feature-num">
+                                                        {String(si + 1).padStart(2, "0")}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className="prj-status-row">
+                                            <span
+                                                className={`prj-dot${proj.status === "Active" ? " prj-dot-active" : ""}`}
+                                            />
+                                            {proj.status}
+                                        </div>
+                                    </div>
                                 </div>
 
-                                {/* TEXT RIGHT */}
-                                <div className="ekl-new-text">
-
-                                    <div className="ekl-label">
-                                        {project.label}
-                                    </div>
-
-                                    <h2>{project.name}</h2>
-
-                                    <p className="ekl-description">
-                                        {project.description}
-                                    </p>
-
-                                    <div className="ekl-feature-list">
-                                        {project.stats.map((s, si) => (
-                                            <div className="ekl-feature" key={s.label}>
-                                                {s.label}
-                                                <span className="ekl-feature-val">{s.value}</span>
-                                                <span>{String(si + 1).padStart(2, "0")}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className="ekl-status-row">
-                                        <span
-                                            className={`ekl-dot${project.status === "Active" ? " ekl-dot-active" : ""}`}
-                                        />
-                                        {project.status}
-                                    </div>
-
+                                {/* GHOST NUMBER */}
+                                <div
+                                    className="prj-ghost-num"
+                                    style={{ color: proj.color }}
+                                >
+                                    {String(i + 1).padStart(2, "0")}
                                 </div>
-                            </div>
 
-                            {/* GHOST NUMBER */}
-                            <div
-                                className="ekl-ghost-num"
-                                style={{ color: project.color }}
-                            >
-                                {String(i + 1).padStart(2, "0")}
-                            </div>
+                            </div>{/* /prj-reveal-layer */}
 
                         </div>
                     </section>
                 ))}
 
 
-                {/* =====================================================
-                    FINAL SECTION
-                ===================================================== */}
-                <section className="ekl-final-section">
-                    <div>
-                        <h2>Launch<br />Further.</h2>
-                        <p>Engineering should adapt to every mission.</p>
-                        <a href="/team" className="ekl-final-btn">
-                            Meet the Team →
-                        </a>
+                {/* ── FINAL CTA ── */}
+                <section className="prj-final">
+                    <div className="prj-final-eyebrow">The People Behind the Rockets</div>
+                    <h2>
+                        Meet the<br />
+                        <em style={{ fontStyle: "italic" }}>Team.</em>
+                    </h2>
+                    <p>
+                        Twenty-three students across propulsion, structures, avionics and recovery.
+                        One shared obsession: getting something into the sky and safely back down.
+                    </p>
+                    <a href="/members" className="prj-final-btn">
+                        Meet the Team →
+                    </a>
+                    <div className="prj-final-footer">
+                        BMSCE Rocketry · Est. 2019 · Flying Higher Every Year
                     </div>
                 </section>
 

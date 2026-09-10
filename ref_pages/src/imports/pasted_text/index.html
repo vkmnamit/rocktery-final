@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Eklavya — Learn Smarter</title>
+
+<style>
+
+/* =========================================================
+   IMPORT
+========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+:root{
+    --cream:#f1eee8;
+    --black:#181818;
+    --grey:#8d8983;
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:"DM Sans",sans-serif;
+    background:var(--cream);
+    color:var(--black);
+    overflow-x:hidden;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+nav{
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:90px;
+
+    padding:0 5vw;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    z-index:1000;
+
+    mix-blend-mode:difference;
+
+    color:white;
+}
+
+.logo{
+    font-family:"Instrument Serif",serif;
+
+    font-size:32px;
+
+    letter-spacing:-.04em;
+}
+
+.nav-links{
+    display:flex;
+    gap:35px;
+}
+
+.nav-links a{
+    color:white;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:600;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    height:100vh;
+
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:var(--cream);
+
+    overflow:hidden;
+}
+
+.hero-content{
+    width:100%;
+
+    position:relative;
+
+    text-align:center;
+}
+
+.hero-title{
+    font-size:clamp(65px,10vw,180px);
+
+    line-height:.84;
+
+    letter-spacing:-.085em;
+
+    font-weight:700;
+}
+
+.hero-line{
+    display:block;
+
+    opacity:0;
+
+    transform:translateY(70px);
+
+    animation:heroText 1s cubic-bezier(.22,1,.36,1) forwards;
+}
+
+.hero-line:nth-child(1){
+    animation-delay:.1s;
+}
+
+.hero-line:nth-child(2){
+    animation-delay:.3s;
+}
+
+.hero-line:nth-child(3){
+    animation-delay:.5s;
+}
+
+@keyframes heroText{
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+
+/* HERO IMAGE */
+
+.hero-image{
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    transform:
+    translate(-50%,-50%)
+    translateY(50px)
+    scale(.8);
+
+    width:clamp(160px,17vw,280px);
+
+    height:clamp(110px,11vw,180px);
+
+    border-radius:40px;
+
+    overflow:hidden;
+
+    opacity:0;
+
+    animation:
+    heroImage 1s
+    cubic-bezier(.22,1,.36,1)
+    forwards;
+
+    animation-delay:1s;
+
+    z-index:3;
+}
+
+.hero-image img{
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    animation:zoom 8s ease-in-out infinite alternate;
+}
+
+@keyframes heroImage{
+
+    to{
+        opacity:1;
+
+        transform:
+        translate(-50%,-50%)
+        translateY(0)
+        scale(1);
+    }
+
+}
+
+@keyframes zoom{
+
+    from{
+        transform:scale(1);
+    }
+
+    to{
+        transform:scale(1.15);
+    }
+
+}
+
+
+/* =========================================================
+   SCROLL HINT
+========================================================= */
+
+.scroll-hint{
+    position:absolute;
+
+    bottom:35px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    font-size:13px;
+
+    letter-spacing:.15em;
+
+    text-transform:uppercase;
+
+    opacity:.55;
+}
+
+
+/* =========================================================
+   STICKY TRANSITION WRAPPER
+
+   320vh gives enough scroll distance.
+
+   The viewport inside stays sticky.
+========================================================= */
+
+.transition-section{
+
+    height:320vh;
+
+    position:relative;
+
+}
+
+
+/* =========================================================
+   STICKY VIEWPORT
+========================================================= */
+
+.sticky-page{
+
+    position:sticky;
+
+    top:0;
+
+    width:100%;
+
+    height:100vh;
+
+    overflow:hidden;
+
+}
+
+
+/* =========================================================
+   CURRENT BACKGROUND
+========================================================= */
+
+.current-background{
+
+    position:absolute;
+
+    inset:0;
+
+    z-index:1;
+
+}
+
+
+/* =========================================================
+   EXPANDING COLOR
+
+   Huge circle.
+
+   It starts extremely small.
+
+   JavaScript increases scale as user scrolls.
+
+   Because it is very large, when scale reaches 1
+   it covers the entire viewport.
+========================================================= */
+
+.expanding-color{
+
+    position:absolute;
+
+    width:260vmax;
+    height:260vmax;
+
+    left:50%;
+
+    bottom:-130vmax;
+
+    border-radius:50%;
+
+    transform:
+    translateX(-50%)
+    scale(.015);
+
+    transform-origin:center;
+
+    z-index:2;
+
+    will-change:transform;
+
+}
+
+
+/* =========================================================
+   NEW PAGE CONTENT
+========================================================= */
+
+.new-content{
+
+    position:relative;
+
+    width:100%;
+    height:100%;
+
+    z-index:5;
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    align-items:center;
+
+    gap:8vw;
+
+    padding:100px 8vw;
+
+}
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.new-image{
+
+    width:100%;
+
+    height:min(65vh,560px);
+
+    border-radius:35px;
+
+    overflow:hidden;
+
+    opacity:0;
+
+    transform:
+    translateY(100px)
+    scale(.88);
+
+    will-change:
+    transform,
+    opacity;
+}
+
+.new-image img{
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+}
+
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+.new-text{
+
+    opacity:0;
+
+    transform:
+    translateY(70px);
+
+    will-change:
+    opacity,
+    transform;
+}
+
+.label{
+
+    font-size:12px;
+
+    letter-spacing:.2em;
+
+    margin-bottom:28px;
+
+    text-transform:uppercase;
+
+    opacity:.55;
+}
+
+.new-text h1{
+
+    font-size:clamp(55px,7vw,125px);
+
+    line-height:.88;
+
+    letter-spacing:-.075em;
+
+    margin-bottom:35px;
+}
+
+.description{
+
+    font-size:18px;
+
+    line-height:1.7;
+
+    max-width:540px;
+
+    opacity:.7;
+
+    margin-bottom:40px;
+}
+
+
+/* =========================================================
+   FEATURES
+========================================================= */
+
+.feature-list{
+
+    border-top:1px solid currentColor;
+}
+
+.feature{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:20px 0;
+
+    border-bottom:
+    1px solid
+    rgba(128,128,128,.35);
+
+    font-size:17px;
+}
+
+.feature span{
+
+    font-size:12px;
+
+    opacity:.5;
+}
+
+
+/* =========================================================
+   STATIC END SECTION
+========================================================= */
+
+.final-section{
+
+    min-height:100vh;
+
+    background:var(--cream);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:80px 20px;
+}
+
+.final-section h2{
+
+    font-size:clamp(70px,11vw,190px);
+
+    line-height:.85;
+
+    letter-spacing:-.09em;
+
+    margin-bottom:30px;
+}
+
+.final-section p{
+
+    font-size:20px;
+
+    opacity:.65;
+
+    margin-bottom:35px;
+}
+
+.final-section button{
+
+    border:none;
+
+    padding:17px 32px;
+
+    border-radius:100px;
+
+    background:var(--black);
+
+    color:var(--cream);
+
+    font-size:15px;
+
+    cursor:pointer;
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:850px){
+
+    nav{
+        padding:0 25px;
+    }
+
+    .nav-links{
+        gap:18px;
+    }
+
+    .nav-links a:last-child{
+        display:none;
+    }
+
+    .new-content{
+
+        grid-template-columns:1fr;
+
+        grid-template-rows:auto auto;
+
+        padding:90px 30px 40px;
+
+        gap:35px;
+    }
+
+    .new-image{
+
+        height:38vh;
+
+        min-height:280px;
+    }
+
+    .new-text h1{
+
+        font-size:58px;
+    }
+
+    .transition-section{
+
+        height:280vh;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<nav>
+
+    <div class="logo">
+        Eklavya.
+    </div>
+
+    <div class="nav-links">
+        <a href="#problem">Problem</a>
+        <a href="#solution">Solution</a>
+        <a href="#future">Future</a>
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1 class="hero-title">
+
+            <span class="hero-line">
+                The System Was
+            </span>
+
+            <span class="hero-line">
+                Never Built
+            </span>
+
+            <span class="hero-line">
+                For You
+            </span>
+
+        </h1>
+
+
+        <div class="hero-image">
+
+            <img
+            src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=90"
+            alt="">
+
+        </div>
+
+    </div>
+
+
+    <div class="scroll-hint">
+        Scroll to explore
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     TRANSITION 1
+
+     CREAM → BLACK
+
+     BLACK STARTS BOTTOM CENTER
+     EXPANDS WHILE SCROLLING
+     COVERS ENTIRE VIEWPORT
+
+     IMAGE → TEXT
+===================================================== -->
+
+<section
+class="transition-section"
+data-from="#f1eee8"
+data-to="#181818"
+data-text="#f1eee8"
+id="problem"
+>
+
+    <div class="sticky-page">
+
+
+        <!-- OLD PAGE COLOR -->
+
+        <div
+        class="current-background"
+        style="background:#f1eee8;"
+        ></div>
+
+
+        <!-- EXPANDING BLACK -->
+
+        <div
+        class="expanding-color"
+        style="background:#181818;"
+        ></div>
+
+
+        <!-- NEW CONTENT -->
+
+        <div
+        class="new-content"
+        style="color:#f1eee8;"
+        >
+
+
+            <!-- IMAGE LEFT -->
+
+            <div class="new-image">
+
+                <img
+                src="https://images.unsplash.com/photo-1456324504439-367cee3b3c32?auto=format&fit=crop&w=1200&q=90"
+                alt="">
+
+            </div>
+
+
+            <!-- TEXT RIGHT -->
+
+            <div class="new-text">
+
+                <div class="label">
+                    The Problem
+                </div>
+
+
+                <h1>
+                    Too Much<br>
+                    To Process.
+                </h1>
+
+
+                <p class="description">
+
+                    Students today have access to endless PDFs,
+                    notes, videos and resources. The challenge
+                    is no longer finding information — it is
+                    understanding what actually matters.
+
+                </p>
+
+
+                <div class="feature-list">
+
+                    <div class="feature">
+
+                        Information Overload
+
+                        <span>01</span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        Scattered Resources
+
+                        <span>02</span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        Generic Learning
+
+                        <span>03</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     TRANSITION 2
+
+     BLACK → CREAM
+
+     CREAM STARTS BOTTOM CENTER
+     EXPANDS OVER BLACK
+
+     IMAGE → TEXT
+===================================================== -->
+
+<section
+class="transition-section"
+data-from="#181818"
+data-to="#f1eee8"
+data-text="#181818"
+id="solution"
+>
+
+    <div class="sticky-page">
+
+
+        <div
+        class="current-background"
+        style="background:#181818;"
+        ></div>
+
+
+        <div
+        class="expanding-color"
+        style="background:#f1eee8;"
+        ></div>
+
+
+        <div
+        class="new-content"
+        style="color:#181818;"
+        >
+
+
+            <div class="new-image">
+
+                <img
+                src="https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&w=1200&q=90"
+                alt="">
+
+            </div>
+
+
+            <div class="new-text">
+
+                <div class="label">
+                    The Solution
+                </div>
+
+
+                <h1>
+                    Learn<br>
+                    Intelligently.
+                </h1>
+
+
+                <p class="description">
+
+                    Eklavya transforms scattered educational
+                    resources into an intelligent system that
+                    understands context and helps students learn
+                    in a way that works for them.
+
+                </p>
+
+
+                <div class="feature-list">
+
+                    <div class="feature">
+
+                        AI Knowledge System
+
+                        <span>01</span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        Semantic Understanding
+
+                        <span>02</span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        Context-Aware Answers
+
+                        <span>03</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     TRANSITION 3
+
+     CREAM → BLACK
+===================================================== -->
+
+<section
+class="transition-section"
+data-from="#f1eee8"
+data-to="#181818"
+data-text="#f1eee8"
+id="future"
+>
+
+    <div class="sticky-page">
+
+
+        <div
+        class="current-background"
+        style="background:#f1eee8;"
+        ></div>
+
+
+        <div
+        class="expanding-color"
+        style="background:#181818;"
+        ></div>
+
+
+        <div
+        class="new-content"
+        style="color:#f1eee8;"
+        >
+
+
+            <div class="new-image">
+
+                <img
+                src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=90"
+                alt="">
+
+            </div>
+
+
+            <div class="new-text">
+
+                <div class="label">
+                    Personalized Learning
+                </div>
+
+
+                <h1>
+                    Built<br>
+                    Around You.
+                </h1>
+
+
+                <p class="description">
+
+                    Every student learns differently. Eklavya
+                    creates an adaptive learning experience
+                    designed around understanding, progress and
+                    individual learning needs.
+
+                </p>
+
+
+                <div class="feature-list">
+
+                    <div class="feature">
+
+                        Personalized Learning Paths
+
+                        <span>01</span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        Adaptive Learning
+
+                        <span>02</span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        Intelligent Recommendations
+
+                        <span>03</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FINAL PAGE
+===================================================== -->
+
+<section class="final-section">
+
+    <div>
+
+        <h2>
+            Learn<br>
+            Smarter.
+        </h2>
+
+
+        <p>
+            Education should adapt to you.
+        </p>
+
+
+        <button>
+            Explore Eklavya →
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+
+     THIS CONTROLS THE STICKY EXPANDING CURVE
+===================================================== -->
+
+<script>
+
+
+/* =========================================================
+   GET ALL TRANSITIONS
+========================================================= */
+
+const transitions =
+document.querySelectorAll(
+    ".transition-section"
+);
+
+
+
+/* =========================================================
+   EASE FUNCTION
+
+   Makes the expansion feel smoother and more cinematic.
+========================================================= */
+
+function easeInOutCubic(x){
+
+    return x < 0.5
+
+        ? 4 * x * x * x
+
+        : 1 -
+        Math.pow(
+            -2 * x + 2,
+            3
+        ) / 2;
+
+}
+
+
+
+/* =========================================================
+   UPDATE ANIMATION
+========================================================= */
+
+function updateTransitions(){
+
+
+    transitions.forEach(
+        (section) => {
+
+
+            /* ELEMENTS */
+
+            const rect =
+            section.getBoundingClientRect();
+
+
+            const expandingColor =
+            section.querySelector(
+                ".expanding-color"
+            );
+
+
+            const image =
+            section.querySelector(
+                ".new-image"
+            );
+
+
+            const text =
+            section.querySelector(
+                ".new-text"
+            );
+
+
+
+            /* =================================================
+               SCROLL PROGRESS
+
+               0 = section starts
+
+               1 = section ends
+            ================================================= */
+
+            const scrollDistance =
+            section.offsetHeight -
+            window.innerHeight;
+
+
+            let progress =
+            -rect.top /
+            scrollDistance;
+
+
+            progress =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    progress
+                )
+            );
+
+
+
+            /* =================================================
+               PHASE 1
+
+               0 → 58%
+
+               EXPANDING COLOR
+
+               The circle physically grows according
+               to scroll progress.
+            ================================================= */
+
+            let colorProgress =
+            progress / 0.58;
+
+
+            colorProgress =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    colorProgress
+                )
+            );
+
+
+            colorProgress =
+            easeInOutCubic(
+                colorProgress
+            );
+
+
+
+            /*
+            Scale:
+
+            Starts tiny.
+
+            Ends large enough to cover
+            the whole viewport.
+            */
+
+            const scale =
+            0.015 +
+            colorProgress * 1.08;
+
+
+            expandingColor.style.transform =
+            `
+            translateX(-50%)
+            scale(${scale})
+            `;
+
+
+
+            /* =================================================
+               PHASE 2
+
+               58 → 78%
+
+               IMAGE APPEARS
+
+               AFTER COLOR HAS COVERED THE PAGE.
+            ================================================= */
+
+            let imageProgress =
+            (progress - 0.58) /
+            0.20;
+
+
+            imageProgress =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    imageProgress
+                )
+            );
+
+
+            imageProgress =
+            easeInOutCubic(
+                imageProgress
+            );
+
+
+            image.style.opacity =
+            imageProgress;
+
+
+            image.style.transform =
+            `
+            translateY(
+                ${100 - imageProgress * 100}px
+            )
+            scale(
+                ${0.88 + imageProgress * 0.12}
+            )
+            `;
+
+
+
+            /* =================================================
+               PHASE 3
+
+               74 → 100%
+
+               TEXT APPEARS AFTER IMAGE.
+            ================================================= */
+
+            let textProgress =
+            (progress - 0.74) /
+            0.26;
+
+
+            textProgress =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    textProgress
+                )
+            );
+
+
+            textProgress =
+            easeInOutCubic(
+                textProgress
+            );
+
+
+            text.style.opacity =
+            textProgress;
+
+
+            text.style.transform =
+            `
+            translateY(
+                ${70 - textProgress * 70}px
+            )
+            `;
+
+
+        }
+
+    );
+
+}
+
+
+
+/* =========================================================
+   RUN ON SCROLL
+========================================================= */
+
+window.addEventListener(
+    "scroll",
+    updateTransitions,
+    {
+        passive:true
+    }
+);
+
+
+
+/* =========================================================
+   RUN ON LOAD
+========================================================= */
+
+window.addEventListener(
+    "load",
+    updateTransitions
+);
+
+
+
+/* =========================================================
+   RUN ON RESIZE
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    updateTransitions
+);
+
+
+</script>
+
+
+</body>
+</html>

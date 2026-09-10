@@ -1,0 +1,10 @@
+{
+  "description": "This web application offers a dynamic project, sponsor, and team pages for Rocketry enthusiasts, enhancing engagement with animations and a modern interface.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
