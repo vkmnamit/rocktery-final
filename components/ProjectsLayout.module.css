@@ -1,0 +1,372 @@
+/* =========================================================
+   PROJECTS PAGE — EKLAVYA-STYLE STICKY SCROLL
+   ========================================================= */
+
+/* ── RESET / PAGE ── */
+.page {
+    position: relative;
+    width: 100%;
+    overflow-x: hidden;
+    background: #f0ece6;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0ece6;
+    overflow: hidden;
+}
+
+.heroContent {
+    width: 100%;
+    position: relative;
+    text-align: center;
+}
+
+.heroTitle {
+    font-size: clamp(65px, 10vw, 160px);
+    line-height: .84;
+    letter-spacing: -.085em;
+    font-weight: 700;
+    color: #19191b;
+}
+
+.heroLine {
+    display: block;
+    opacity: 0;
+    transform: translateY(70px);
+    animation: heroText 1s cubic-bezier(.22, 1, .36, 1) forwards;
+}
+
+.heroLine:nth-child(1) { animation-delay: .1s; }
+.heroLine:nth-child(2) { animation-delay: .3s; }
+.heroLine:nth-child(3) { animation-delay: .5s; }
+
+@keyframes heroText {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero image pill — floating in front of the title */
+.heroImageBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translateY(50px) scale(.8);
+    width: clamp(140px, 16vw, 260px);
+    height: clamp(95px, 10vw, 170px);
+    border-radius: 36px;
+    overflow: hidden;
+    opacity: 0;
+    animation: heroImage 1s cubic-bezier(.22, 1, .36, 1) forwards;
+    animation-delay: 1s;
+    z-index: 3;
+}
+
+.heroImageBox img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: zoom 8s ease-in-out infinite alternate;
+}
+
+@keyframes heroImage {
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateY(0) scale(1);
+    }
+}
+
+@keyframes zoom {
+    from { transform: scale(1); }
+    to   { transform: scale(1.15); }
+}
+
+/* Scroll hint */
+.scrollHint {
+    position: absolute;
+    bottom: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    opacity: .45;
+    color: #19191b;
+}
+
+/* =========================================================
+   TRANSITION SECTION WRAPPER
+   320vh gives enough scroll distance per project.
+   ========================================================= */
+
+.transitionSection {
+    height: 320vh;
+    position: relative;
+}
+
+/* ── STICKY VIEWPORT ── */
+.stickyPage {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ── OLD BACKGROUND FILL ── */
+.currentBackground {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+/* =========================================================
+   EXPANDING COLOUR BUBBLE
+   260vmax circle, starts at scale(0.015), JS drives it to ~1.1
+   ========================================================= */
+
+.expandingColor {
+    position: absolute;
+    width: 260vmax;
+    height: 260vmax;
+    left: 50%;
+    bottom: -130vmax;
+    border-radius: 50%;
+    transform: translateX(-50%) scale(.015);
+    transform-origin: center;
+    z-index: 2;
+    will-change: transform;
+}
+
+/* =========================================================
+   NEW PAGE CONTENT  (image + text side-by-side)
+   ========================================================= */
+
+.newContent {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 8vw;
+    padding: 100px 8vw;
+}
+
+/* ── IMAGE ── */
+.newImage {
+    width: 100%;
+    height: min(65vh, 560px);
+    border-radius: 30px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(100px) scale(.88);
+    will-change: transform, opacity;
+}
+
+.newImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: transparent;
+}
+
+/* ── TEXT ── */
+.newText {
+    opacity: 0;
+    transform: translateY(70px);
+    will-change: opacity, transform;
+}
+
+/* label above title */
+.label {
+    font-size: 12px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    opacity: .55;
+    margin-bottom: 22px;
+}
+
+/* project name */
+.projName {
+    font-size: clamp(52px, 7vw, 120px);
+    line-height: .88;
+    letter-spacing: -.075em;
+    font-weight: 700;
+    margin-bottom: 28px;
+}
+
+/* description */
+.description {
+    font-size: 17px;
+    line-height: 1.75;
+    max-width: 520px;
+    opacity: .7;
+    margin-bottom: 36px;
+    font-weight: 400;
+}
+
+/* ── STATS / FEATURE LIST ── */
+.featureList {
+    border-top: 1px solid currentColor;
+    margin-bottom: 24px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(128, 128, 128, .3);
+    font-size: 15px;
+    gap: 12px;
+}
+
+.statVal {
+    font-weight: 700;
+    letter-spacing: -.01em;
+    flex: 1;
+    text-align: right;
+}
+
+.featureIndex {
+    font-size: 11px;
+    opacity: .45;
+    min-width: 24px;
+    text-align: right;
+}
+
+/* ── STATUS ROW ── */
+.statusRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    opacity: .65;
+    margin-top: 8px;
+}
+
+.statusDot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: currentColor;
+    opacity: .4;
+}
+
+.statusActive {
+    background: #5fff9a !important;
+    opacity: 1 !important;
+    box-shadow: 0 0 8px rgba(95, 255, 154, .55);
+}
+
+.statusDone {
+    background: currentColor;
+    opacity: .35 !important;
+}
+
+/* ── GHOST NUMBER ── */
+.ghostNum {
+    position: absolute;
+    bottom: -20px;
+    right: 5vw;
+    font-size: clamp(80px, 12vw, 180px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -.05em;
+    opacity: .04;
+    pointer-events: none;
+    user-select: none;
+    z-index: 6;
+}
+
+/* =========================================================
+   FINAL SECTION
+   ========================================================= */
+
+.finalSection {
+    min-height: 100vh;
+    background: #f0ece6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.finalHeading {
+    font-size: clamp(70px, 11vw, 185px);
+    line-height: .85;
+    letter-spacing: -.09em;
+    font-weight: 700;
+    color: #19191b;
+    margin-bottom: 28px;
+}
+
+.finalSub {
+    font-size: 19px;
+    opacity: .6;
+    color: #19191b;
+    margin-bottom: 36px;
+}
+
+.finalBtn {
+    display: inline-block;
+    border: none;
+    padding: 17px 34px;
+    border-radius: 100px;
+    background: #19191b;
+    color: #f0ece6;
+    font-size: 15px;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: .02em;
+    transition: opacity .25s;
+}
+
+.finalBtn:hover {
+    opacity: .75;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .newContent {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        padding: 90px 30px 40px;
+        gap: 30px;
+    }
+
+    .newImage {
+        height: 38vh;
+        min-height: 260px;
+    }
+
+    .projName {
+        font-size: 54px;
+    }
+
+    .transitionSection {
+        height: 280vh;
+    }
+
+    .ghostNum {
+        display: none;
+    }
+}
+

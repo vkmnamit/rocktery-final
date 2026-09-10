@@ -1,15 +1,13 @@
 "use client";
 
-import PagePreloader from "@/components/PagePreloader";
-import CinematicScroll from "@/components/CinematicScroll";
+import ProjectsLayout from "@/components/ProjectsLayout";
 import Navbar from "@/components/Navbar";
 
 export default function ProjectsPage() {
     return (
         <main>
-            <PagePreloader title="Projects" />
             <Navbar />
-            <CinematicScroll />
+            <ProjectsLayout />
         </main>
     );
 }
