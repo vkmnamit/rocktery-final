@@ -1,598 +1,454 @@
 "use client";
 
 import { useEffect } from "react";
+import type { CSSProperties } from "react";
+import FloatingParticles from "./FloatingParticles";
+import "./ProjectsLayout.css";
 
-/* =====================================================
-   PROJECTS DATA
-===================================================== */
-const projects = [
-    {
-        id:          "aurora",
-        label:       "High-Power Rocketry",
-        name:        "AURORA",
-        status:      "Active",
-        description: "Aurora represents our most ambitious build to date — a full-scale two-stage high-power rocket designed for the 10,000 ft AGL category. Engineered for precision, this is BMSCE Rocketry's flagship programme.",
-        image:       "/imgs/1.png",
-        bgOld:       "#f0ece6",
-        bgNew:       "#19191b",
-        color:       "#f0ece6",
-        imgFirst:    true,
-        stats: [
-            { label: "Target Altitude", value: "10,000 ft" },
-            { label: "Max Speed",       value: "Mach 0.9"  },
-            { label: "Total Thrust",    value: "2499 N"    },
-        ],
-    },
-    {
-        id:          "phoenix",
-        label:       "Supersonic Research",
-        name:        "PHOENIX",
-        status:      "Completed",
-        description: "Phoenix was our first attempt at breaking the sound barrier — a slender, fin-stabilised single-stage design optimised for minimum drag and maximum velocity.",
-        image:       "/imgs/2.png",
-        bgOld:       "#19191b",
-        bgNew:       "#f0ece6",
-        color:       "#19191b",
-        imgFirst:    false,
-        stats: [
-            { label: "Peak Altitude", value: "7,500 ft" },
-            { label: "Max Speed",     value: "Mach 1.1" },
-            { label: "Peak Thrust",   value: "1800 N"   },
-        ],
-    },
-    {
-        id:          "helios",
-        label:       "Science Platform",
-        name:        "HELIOS",
-        status:      "Completed",
-        description: "Helios was built as a high-altitude science platform, designed to carry a pressurised payload bay to 30,000 ft AGL and return data from the upper atmosphere.",
-        image:       "/imgs/3.png",
-        bgOld:       "#f0ece6",
-        bgNew:       "#19191b",
-        color:       "#f0ece6",
-        imgFirst:    true,
-        stats: [
-            { label: "Target Altitude", value: "30,000 ft" },
-            { label: "Payload Bay",     value: "4 kg"      },
-            { label: "Total Impulse",   value: "40,960 Ns" },
-        ],
-    },
-    {
-        id:          "titan",
-        label:       "Liquid Propulsion",
-        name:        "TITAN",
-        status:      "Completed",
-        description: "Titan was a ground-test engine programme — our first venture into liquid propulsion. A single intelligent ecosystem connecting engines, control systems and fuel management.",
-        image:       "/imgs/4.png",
-        bgOld:       "#19191b",
-        bgNew:       "#f0ece6",
-        color:       "#19191b",
-        imgFirst:    false,
-        stats: [
-            { label: "Propellants", value: "LOX / IPA" },
-            { label: "Thrust",      value: "500 N"     },
-            { label: "Burn Time",   value: "8 s"       },
-        ],
-    },
-];
-
-/* =====================================================
-   EASE
-===================================================== */
-function easeInOutCubic(x: number) {
-    return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-}
-
-/* =====================================================
-   COMPONENT
-===================================================== */
-export default function ProjectsLayout() {
-
+export default function Home() {
     useEffect(() => {
-        const sections =
-            document.querySelectorAll<HTMLElement>(".prj-transition-section");
+        const wipes = Array.from(
+            document.querySelectorAll<HTMLElement>(".wipe")
+        );
+        const revealSections = Array.from(
+            document.querySelectorAll<HTMLElement>(".project-reveal")
+        );
+
+        const clamp = (v: number) => Math.max(0, Math.min(1, v));
+        const ease = (v: number) => 1 - Math.pow(1 - v, 3);
+
+        let raf = 0;
 
         function update() {
-            sections.forEach((section) => {
-                const rect       = section.getBoundingClientRect();
-                const scrollDist = section.offsetHeight - window.innerHeight;
-                const p          = Math.max(0, Math.min(1, -rect.top / scrollDist));
+            raf = 0;
+            const vh = window.innerHeight;
 
-                const reveal = section.querySelector<HTMLElement>(".prj-reveal-layer");
-                const img    = section.querySelector<HTMLElement>(".prj-new-image");
-                const txt    = section.querySelector<HTMLElement>(".prj-new-text");
-                if (!reveal || !img || !txt) return;
+            wipes.forEach((el) => {
+                const rect = el.getBoundingClientRect();
+                const p = clamp((vh - rect.top) / vh);
+                const r = Math.round(1000 * (1 - ease(p)));
 
-                // ── Phase 1: 0→60% scroll — circle grows from BOTTOM-CENTER ──
-                //
-                // Use PIXEL coords so there is zero ambiguity about where
-                // 50%/100% resolves.  We read the element's actual dimensions,
-                // put the clip-path center at (w/2, h) in pixels
-                // = exact bottom-center of the sticky viewport, then grow
-                // the radius from 0 to the diagonal length (farthest corner).
-                const sticky  = section.querySelector<HTMLElement>(".prj-sticky-page");
-                if (!sticky) return;
-                const w       = sticky.offsetWidth;
-                const h       = sticky.offsetHeight;
-                const cx      = w / 2;                           // horizontal center
-                const cy      = h;                               // BOTTOM of element
-                const maxR    = Math.hypot(cx, h) + 20;         // diagonal + margin
-                const cp      = easeInOutCubic(Math.max(0, Math.min(1, p / 0.60)));
-                const radius  = cp * maxR;
-                reveal.style.clipPath = `circle(${radius}px at ${cx}px ${cy}px)`;
-
-                // ── Phase 2: 60→80% — image rises up ──
-                const ip = easeInOutCubic(Math.max(0, Math.min(1, (p - 0.60) / 0.20)));
-                img.style.opacity   = String(ip);
-                img.style.transform = `translateY(${(1 - ip) * 90}px) scale(${0.88 + ip * 0.12})`;
-
-                // ── Phase 3: 75→100% — text fades up ──
-                const tp = easeInOutCubic(Math.max(0, Math.min(1, (p - 0.75) / 0.25)));
-                txt.style.opacity   = String(tp);
-                txt.style.transform = `translateY(${(1 - tp) * 65}px)`;
+                el.style.borderTopLeftRadius = `${r}px`;
+                el.style.borderTopRightRadius = `${r}px`;
             });
         }
 
-        window.addEventListener("scroll",  update, { passive: true });
-        window.addEventListener("resize",  update, { passive: true });
-        window.addEventListener("load",    update);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("active");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.25, rootMargin: "0px 0px -10% 0px" }
+        );
+        revealSections.forEach((section) => observer.observe(section));
+
+        function schedule() {
+            if (!raf) raf = requestAnimationFrame(update);
+        }
+
+        window.addEventListener("scroll", schedule, { passive: true });
+        window.addEventListener("resize", schedule);
+
         update();
 
         return () => {
-            window.removeEventListener("scroll",  update);
-            window.removeEventListener("resize",  update);
-            window.removeEventListener("load",    update);
+            window.removeEventListener("scroll", schedule);
+            window.removeEventListener("resize", schedule);
+
+            if (raf) cancelAnimationFrame(raf);
+            observer.disconnect();
         };
     }, []);
 
+    const trackLaunchPointer = (event: React.PointerEvent<HTMLElement>) => {
+        const target = event.currentTarget;
+        const rect = target.getBoundingClientRect();
+        target.style.setProperty("--pointer-x", `${event.clientX - rect.left}px`);
+        target.style.setProperty("--pointer-y", `${event.clientY - rect.top}px`);
+    };
+
     return (
         <>
-            <style dangerouslySetInnerHTML={{ __html: `
-                @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+            {/* HERO */}
+            <section className="hero">
+                <h1>
+                    <span>We Build</span>
+                    <span>Rockets.</span>
+                </h1>
 
-                /* ── page ── */
-                .prj-page {
-                    font-family: "DM Sans", sans-serif;
-                    overflow-x: hidden;
-                    background: #f0ece6;
-                    color: #19191b;
-                }
+                <div className="hero-image">
+                    <img
+                        src="https://res.cloudinary.com/dgrrdy6sk/image/upload/v1787136697/1_1_zzxexj.png"
+                        alt="Rocket"
+                    />
+                </div>
 
-                /* ── HERO ── */
-                .prj-hero {
-                    height: 100vh;
-                    position: relative;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background: #f0ece6;
-                    overflow: hidden;
-                }
-                .prj-hero-content {
-                    width: 100%;
-                    position: relative;
-                    text-align: center;
-                }
-                .prj-hero-title {
-                    font-size: clamp(65px, 10vw, 180px);
-                    line-height: .84;
-                    letter-spacing: -.085em;
-                    font-weight: 700;
-                    color: #19191b;
-                }
-                .prj-hero-line {
-                    display: block;
-                    opacity: 0;
-                    transform: translateY(70px);
-                    animation: prjHeroText 1s cubic-bezier(.22,1,.36,1) forwards;
-                }
-                .prj-hero-line:nth-child(1) { animation-delay: .1s; }
-                .prj-hero-line:nth-child(2) { animation-delay: .3s; }
-                .prj-hero-line:nth-child(3) { animation-delay: .5s; }
-                @keyframes prjHeroText {
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .prj-hero-image {
-                    position: absolute;
-                    top: 50%; left: 50%;
-                    transform: translate(-50%,-50%) translateY(50px) scale(.8);
-                    width: clamp(160px, 17vw, 280px);
-                    height: clamp(110px, 11vw, 180px);
-                    border-radius: 40px;
-                    overflow: hidden;
-                    opacity: 0;
-                    animation: prjHeroImage 1s cubic-bezier(.22,1,.36,1) 1s forwards;
-                    z-index: 3;
-                }
-                .prj-hero-image img {
-                    width: 100%; height: 100%;
-                    object-fit: cover;
-                    animation: prjZoom 8s ease-in-out infinite alternate;
-                }
-                @keyframes prjHeroImage {
-                    to { opacity:1; transform: translate(-50%,-50%) translateY(0) scale(1); }
-                }
-                @keyframes prjZoom {
-                    from { transform: scale(1); }
-                    to   { transform: scale(1.15); }
-                }
-                .prj-scroll-hint {
-                    position: absolute;
-                    bottom: 35px; left: 50%;
-                    transform: translateX(-50%);
-                    font-size: 13px;
-                    letter-spacing: .15em;
-                    text-transform: uppercase;
-                    opacity: .55;
-                    color: #19191b;
-                    animation: prjPulse 2.5s ease-in-out 2s infinite;
-                }
-                @keyframes prjPulse {
-                    0%, 100% { opacity: .3; }
-                    50%      { opacity: .65; }
-                }
+                <div className="scroll-hint">Scroll to explore ↓</div>
+            </section>
 
-                /* Orbit rings decoration */
-                .prj-ring {
-                    position: absolute;
-                    border-radius: 50%;
-                    border: 1px solid rgba(25,25,27,0.06);
-                    top: 50%; left: 50%;
-                    transform: translate(-50%,-50%);
-                    animation: prjRotate 30s linear infinite;
-                    pointer-events: none;
-                }
-                .prj-ring-2 { animation-duration: 20s; animation-direction: reverse; }
-                @keyframes prjRotate {
-                    from { transform: translate(-50%,-50%) rotate(0deg); }
-                    to   { transform: translate(-50%,-50%) rotate(360deg); }
-                }
+            {/* PROJECT 01 — cream wipes over the black hero */}
+            <section
+                className="wipe"
+                style={{ "--fill": "#f2ede4" } as CSSProperties}
+            />
 
-                /* ── TRANSITION SECTION ── */
-                .prj-transition-section {
-                    height: 320vh;
-                    position: relative;
-                }
-                .prj-sticky-page {
-                    position: sticky;
-                    top: 0;
-                    width: 100%;
-                    height: 100vh;
-                    overflow: hidden;
-                }
-                /* Old background — always fully visible behind the reveal layer */
-                .prj-bg {
-                    position: absolute;
-                    inset: 0;
-                    z-index: 1;
-                }
-                /*
-                 * Reveal layer — the entire new-page world lives here.
-                 * clip-path clips it to the expanding circle shape.
-                 * At progress=0 → clip-path: circle(0% ...) — nothing visible.
-                 * As scroll grows → circle expands until it covers the screen.
-                 * The clip origin is bottom-center of the viewport.
-                 */
-                .prj-reveal-layer {
-                    position: absolute;
-                    inset: 0;
-                    z-index: 2;
-                    /* Start fully clipped (invisible) */
-                    clip-path: circle(0vmax at 50% 100%);
-                    will-change: clip-path;
-                    overflow: hidden;
-                }
-                /* New solid background fill inside the reveal layer */
-                .prj-reveal-bg {
-                    position: absolute;
-                    inset: 0;
-                    z-index: 1;
-                }
-
-                /* ── CONTENT GRID (lives inside .prj-reveal-layer) ── */
-                .prj-content {
-                    position: absolute;
-                    inset: 0;
-                    z-index: 2;
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    align-items: center;
-                    gap: 8vw;
-                    padding: 100px 8vw;
-                }
-                .prj-new-image {
-                    width: 100%;
-                    height: min(65vh, 560px);
-                    border-radius: 35px;
-                    overflow: hidden;
-                    opacity: 0;
-                    transform: translateY(90px) scale(.88);
-                    will-change: transform, opacity;
-                }
-                .prj-new-image img {
-                    width: 100%; height: 100%;
-                    object-fit: contain;
-                }
-                .prj-new-text {
-                    opacity: 0;
-                    transform: translateY(65px);
-                    will-change: opacity, transform;
-                }
-                .prj-label {
-                    font-size: 12px;
-                    letter-spacing: .2em;
-                    margin-bottom: 28px;
-                    text-transform: uppercase;
-                    opacity: .55;
-                }
-                .prj-new-text h2 {
-                    font-family: "Instrument Serif", serif;
-                    font-size: clamp(55px, 7vw, 125px);
-                    line-height: .88;
-                    letter-spacing: -.075em;
-                    font-weight: 400;
-                    margin-bottom: 28px;
-                }
-                .prj-description {
-                    font-size: 18px;
-                    line-height: 1.7;
-                    max-width: 540px;
-                    opacity: .7;
-                    margin-bottom: 40px;
-                }
-                .prj-feature-list {
-                    border-top: 1px solid currentColor;
-                }
-                .prj-feature {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 18px 0;
-                    border-bottom: 1px solid rgba(128,128,128,.35);
-                    font-size: 17px;
-                    gap: 12px;
-                }
-                .prj-feature-val {
-                    font-weight: 700;
-                    flex: 1;
-                    text-align: right;
-                    margin-right: 16px;
-                }
-                .prj-feature-num {
-                    font-size: 12px;
-                    opacity: .45;
-                    min-width: 22px;
-                    text-align: right;
-                }
-                .prj-status-row {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    font-size: 11px;
-                    letter-spacing: .18em;
-                    text-transform: uppercase;
-                    opacity: .6;
-                    margin-top: 20px;
-                }
-                .prj-dot {
-                    width: 7px; height: 7px;
-                    border-radius: 50%;
-                    background: currentColor;
-                    opacity: .35;
-                }
-                .prj-dot-active {
-                    background: #5fff9a !important;
-                    opacity: 1 !important;
-                    box-shadow: 0 0 8px rgba(95,255,154,.55);
-                }
-                .prj-ghost-num {
-                    position: absolute;
-                    bottom: -20px; right: 5vw;
-                    font-size: clamp(80px, 12vw, 180px);
-                    font-weight: 900;
-                    line-height: 1;
-                    letter-spacing: -.05em;
-                    opacity: .04;
-                    pointer-events: none;
-                    user-select: none;
-                    z-index: 6;
-                }
-
-                /* ── FINAL SECTION ── */
-                .prj-final {
-                    min-height: 100vh;
-                    background: #f0ece6;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    text-align: center;
-                    padding: 80px 5vw;
-                    flex-direction: column;
-                    color: #19191b;
-                }
-                .prj-final-eyebrow {
-                    font-size: 12px;
-                    letter-spacing: .2em;
-                    text-transform: uppercase;
-                    opacity: .4;
-                    margin-bottom: 40px;
-                }
-                .prj-final h2 {
-                    font-family: "Instrument Serif", serif;
-                    font-size: clamp(72px, 12vw, 200px);
-                    line-height: .84;
-                    letter-spacing: -.085em;
-                    font-weight: 400;
-                    margin-bottom: 36px;
-                }
-                .prj-final p {
-                    font-size: 19px;
-                    opacity: .6;
-                    max-width: 480px;
-                    line-height: 1.65;
-                    margin-bottom: 48px;
-                }
-                .prj-final-btn {
-                    display: inline-block;
-                    padding: 18px 38px;
-                    border-radius: 100px;
-                    background: #19191b;
-                    color: #f0ece6;
-                    font-size: 15px;
-                    font-weight: 600;
-                    letter-spacing: .04em;
-                    cursor: pointer;
-                    border: none;
-                    text-decoration: none;
-                    transition: opacity .25s, transform .25s;
-                }
-                .prj-final-btn:hover { opacity: .8; transform: translateY(-2px); }
-                .prj-final-footer {
-                    margin-top: 100px;
-                    font-size: 13px;
-                    opacity: .28;
-                    letter-spacing: .1em;
-                }
-
-                /* ── MOBILE ── */
-                @media (max-width: 860px) {
-                    .prj-content {
-                        grid-template-columns: 1fr;
-                        padding: 90px 28px 40px;
-                        gap: 32px;
-                    }
-                    .prj-new-image { height: 38vh; min-height: 260px; }
-                    .prj-new-text h2 { font-size: 54px; }
-                    .prj-transition-section { height: 280vh; }
-                    .prj-ghost-num { display: none; }
-                }
-            ` }} />
-
-            <div className="prj-page">
-
-                {/* ── HERO ── */}
-                <section className="prj-hero">
-                    {/* Decorative orbit rings */}
-                    <div className="prj-ring"  style={{ width: "min(60vw,560px)", height: "min(60vw,560px)" }} />
-                    <div className="prj-ring prj-ring-2" style={{ width: "min(40vw,380px)", height: "min(40vw,380px)" }} />
-
-                    <div className="prj-hero-content">
-                        <h1 className="prj-hero-title">
-                            <span className="prj-hero-line">We Build</span>
-                            <span className="prj-hero-line">
-                                <em style={{ fontFamily: '"Instrument Serif", serif', fontStyle: "italic", fontWeight: 400 }}>Rockets.</em>
-                            </span>
-                            <span className="prj-hero-line">From Scratch.</span>
-                        </h1>
-
-                        <div className="prj-hero-image">
-                            <img src="/imgs/1.png" alt="BMSCE Rocket" />
+            <section
+                className="mission-title project-reveal"
+                style={{
+                    "--bg": "#f2ede4",
+                    "--ink": "#151515",
+                } as CSSProperties}
+            >
+                <div className="intro-index">01 / 04 · NAF-2</div>
+                <h2>
+                    <span>Independent</span>
+                    <span>Launch</span>
+                    <span>NAF-2.</span>
+                </h2>
+            </section>
+            <section
+                className="details-page project-reveal"
+                style={{
+                    "--bg": "#f2ede4",
+                    "--ink": "#151515",
+                } as CSSProperties}
+            >
+                <div className="details-wrap">
+                    <aside className="details-side">
+                        <div className="details-number">01 / 04 · NAF-2 · Mission Archive</div>
+                        <h3>
+                            Independent
+                            <br />
+                            Flight.
+                        </h3>
+                        <div className="side-line"></div>
+                        <div className="side-meta">
+                            Deployment Date · December 14, 2025
+                            <br />
+                            <br />
+                            Launch Site · Handigundi Betta, Ramanagara District, Karnataka, India
                         </div>
-                    </div>
-
-                    <div className="prj-scroll-hint">Scroll to explore</div>
-                </section>
 
 
-                {/* ── TRANSITION SECTIONS — one per project ── */}
-                {projects.map((proj, i) => (
-                    <section
-                        key={proj.id}
-                        id={proj.id}
-                        className="prj-transition-section"
-                    >
-                        <div className="prj-sticky-page">
-
-                            {/* ── OLD BACKGROUND — visible beneath the circle ── */}
-                            <div className="prj-bg" style={{ background: proj.bgOld }} />
-
-                            {/*
-                             * ── REVEAL LAYER ──
-                             * clip-path is driven by scroll: starts as circle(0%) at
-                             * bottom-center, expands until it covers the whole screen.
-                             * Everything new (bg, image, text) lives inside here so
-                             * nothing shows until the circle has grown over it.
-                             */}
-                            <div className="prj-reveal-layer">
-
-                                {/* New solid background fill */}
-                                <div className="prj-reveal-bg" style={{ background: proj.bgNew }} />
-
-                                {/* CONTENT GRID */}
-                                <div className="prj-content" style={{ color: proj.color }}>
-
-                                    {/* IMAGE */}
-                                    <div
-                                        className="prj-new-image"
-                                        style={{ order: proj.imgFirst ? 0 : 2 }}
-                                    >
-                                        <img src={proj.image} alt={proj.name} />
-                                    </div>
-
-                                    {/* TEXT */}
-                                    <div className="prj-new-text" style={{ order: 1 }}>
-                                        <div className="prj-label">{proj.label}</div>
-
-                                        <h2>{proj.name}</h2>
-
-                                        <p className="prj-description">{proj.description}</p>
-
-                                        <div className="prj-feature-list">
-                                            {proj.stats.map((s, si) => (
-                                                <div className="prj-feature" key={s.label}>
-                                                    {s.label}
-                                                    <span className="prj-feature-val">{s.value}</span>
-                                                    <span className="prj-feature-num">
-                                                        {String(si + 1).padStart(2, "0")}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        <div className="prj-status-row">
-                                            <span
-                                                className={`prj-dot${proj.status === "Active" ? " prj-dot-active" : ""}`}
-                                            />
-                                            {proj.status}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* GHOST NUMBER */}
-                                <div
-                                    className="prj-ghost-num"
-                                    style={{ color: proj.color }}
-                                >
-                                    {String(i + 1).padStart(2, "0")}
-                                </div>
-
-                            </div>{/* /prj-reveal-layer */}
-
+                        <div className="large-image">
+                            <img
+                                src="https://res.cloudinary.com/dgrrdy6sk/image/upload/v1787136697/1_1_zzxexj.png"
+                                alt="Mission 1"
+                            />
                         </div>
-                    </section>
-                ))}
+                    </aside>
+
+                    <main className="details-main">
+                        <p className="intro-copy">
+                            A mission built to validate independent launch capability while proving
+                            that redundant recovery systems could safely bring the vehicle back even
+                            when flight conditions did not go as planned.
+                        </p>
+
+                        <div className="spec-block">
+                            <div className="spec-label">Mission Statement</div>
+                            <div className="spec-text">
+                                To validate redundant recovery mechanisms & Independent launch operation capabilities.
+                            </div>
+                        </div>
+
+                        <div className="spec-block">
+                            <div className="spec-label">Technical Architecture</div>
+                            <div className="spec-text">
+                                GFRP Airframe, Von Karmen Series Nose Cone, Custom Fins for extremely
+                                stable flight. Inhouse manufactured avionics & telemetry systems
+                                alongside Recovery hardware & Parachute.
+                            </div>
+                        </div>
+
+                        <div className="spec-block">
+                            <div className="spec-label">Mission Conclusion</div>
+                            <div className="spec-text">
+                                Commercial Motor failure leading to sub nominal apogee but Safe &
+                                successful recovery achieved. Independent Launch Operations Successfully
+                                conducted end to end and praised by Industry Experts.
+                            </div>
+                        </div>
+
+                        <div className="spec-block">
+                            <div className="spec-label">Launch Operations</div>
+                            <div className="spec-text">
+                                Securing a landmark position as the fifth student-led team nationwide
+                                to successfully establish and execute end-to-end independent launch capabilities.
+                            </div>
+                        </div>
+
+                    </main>
+                </div>
+            </section>
+            {/* PROJECT 02 — black wipes over the cream */}
+            <section
+                className="wipe"
+                style={{ "--fill": "#151515" } as CSSProperties}
+            />
+
+            <section
+                className="mission-title project-reveal"
+                style={{
+                    "--bg": "#151515",
+                    "--ink": "#f2ede4",
+                } as CSSProperties}
+            >
+                <div className="intro-index">02 / 04 · Vyomagni</div>
+                <h2>
+                    <span>Vyomagni</span>
+                    <span>Model</span>
+                    <span>Rocketry.</span>
+                </h2>
+            </section>
+
+            <section
+                className="details-page project-reveal"
+                style={{
+                    "--bg": "#151515",
+                    "--ink": "#f2ede4",
+                } as CSSProperties}
+            >
+                <div className="details-wrap">
+                    <aside className="details-side">
+                        <div className="details-number">02 / 04 · ISRO Model Rocketry</div>
+                        <h3>
+                            Vyomagni
+                            <br />
+                            Rocketry.
+                        </h3>
+                        <div className="side-line"></div>
+                        <div className="side-meta">
+                            InSPACE · ISRO Collaboration
+                            <br />
+                            <br />
+                            Model Rocketry Development Programme
+                        </div>
 
 
-                {/* ── FINAL CTA ── */}
-                <section className="prj-final">
-                    <div className="prj-final-eyebrow">The People Behind the Rockets</div>
+                        <div className="large-image">
+                            <img
+                                src="https://res.cloudinary.com/dgrrdy6sk/image/upload/v1787136701/2_1_yj8fwg.png"
+                                alt="Mission 2"
+                            />
+                        </div>
+                    </aside>
+
+                    <main className="details-main">
+                        <p className="intro-copy">
+                            A competition flight focused on payload capacity, precision apogee and
+                            achieving a stable vehicle configuration under demanding national
+                            competition conditions.
+                        </p>
+
+                        <div className="spec-block">
+                            <div className="spec-label">Mission Statement</div>
+                            <div className="spec-text">
+                                To validate payload capacities and precision apogee launch capabilities.
+                            </div>
+                        </div>
+
+                        <div className="spec-block">
+                            <div className="spec-label">Technical Architecture</div>
+                            <div className="spec-text">
+                                6 inch diameter Rocket, integrated with 1 kg payload CanSat, Carbon
+                                fiber 3D printed components for weight reduction with G10 fins &
+                                GFRP Airframe.
+                            </div>
+                        </div>
+
+                        <div className="spec-block">
+                            <div className="spec-label">Mission Conclusion</div>
+                            <div className="spec-text">
+                                Successfully qualified for national finals, most stable flight in the
+                                competition with sub nominal recovery.
+                            </div>
+                        </div>
+
+                    </main>
+                </div>
+            </section>
+            {/* PROJECT 03 — cream wipes over the black */}
+            <section
+                className="wipe"
+                style={{ "--fill": "#f2ede4" } as CSSProperties}
+            />
+
+            <section
+                className="mission-title project-reveal"
+                style={{
+                    "--bg": "#f2ede4",
+                    "--ink": "#151515",
+                } as CSSProperties}
+            >
+                <div className="intro-index">03 / 04 · Lumos S3P3</div>
+                <h2>
+                    <span>Motor</span>
+                    <span>Development</span>
+                    <span>Lumos S3P3.</span>
+                </h2>
+            </section>
+
+            <section
+                className="details-page project-reveal"
+                style={{
+                    "--bg": "#f2ede4",
+                    "--ink": "#151515",
+                } as CSSProperties}
+            >
+                <div className="details-wrap">
+                    <aside className="details-side">
+                        <div className="details-number">03 / 04 · Motor Development</div>
+                        <h3>
+                            Build
+                            <br />
+                            Thrust.
+                        </h3>
+                        <div className="side-line"></div>
+                        <div className="side-meta">
+                            Inhouse propulsion research
+                            <br />
+                            <br />
+                            Structured testing programme
+                        </div>
+
+
+                        <div className="large-image">
+                            <img
+                                src="https://res.cloudinary.com/dgrrdy6sk/image/upload/v1787136867/4_1_mw6rw2.png"
+                                alt="Mission 3"
+                            />
+                        </div>
+                    </aside>
+
+                    <main className="details-main">
+                        <p className="intro-copy">
+                            A structured research programme aimed at progressively developing inhouse
+                            solid propulsion capability through controlled testing and increasing impulse.
+                        </p>
+
+                        <div className="spec-block">
+                            <div className="spec-label">Mission Statement</div>
+                            <div className="spec-text">
+                                To develop inhouse I class solid propulsion motor collaborating with startups.
+                            </div>
+                        </div>
+
+                        <div className="spec-block">
+                            <div className="spec-label">Technical Architecture</div>
+                            <div className="spec-text">
+                                System architecture of structured testing with increasing Impulse to
+                                achieve the goal safely.
+                            </div>
+                        </div>
+
+                    </main>
+                </div>
+            </section>
+            {/* PROJECT 04 — black wipes over the cream */}
+            <section
+                className="wipe"
+                style={{ "--fill": "#151515" } as CSSProperties}
+            />
+
+            <section
+                className="mission-title project-reveal"
+                style={{
+                    "--bg": "#151515",
+                    "--ink": "#f2ede4",
+                } as CSSProperties}
+            >
+                <div className="intro-index">04 / 04 · Phoenix</div>
+                <h2>
+                    <span>Upcoming</span>
+                    <span>Mission</span>
+                    <span>Phoenix.</span>
+                </h2>
+            </section>
+
+            <section
+                className="details-page project-reveal"
+                style={{
+                    "--bg": "#151515",
+                    "--ink": "#f2ede4",
+                } as CSSProperties}
+            >
+                <div className="details-wrap">
+                    <aside className="details-side">
+                        <div className="details-number">04 / 04 · Upcoming Mission</div>
+                        <h3>
+                            Higher.
+                            <br />
+                            Smarter.
+                        </h3>
+                        <div className="side-line"></div>
+                        <div className="side-meta">
+                            Advanced telemetry · Redundant avionics
+                            <br />
+                            <br />
+                            Higher apogee programme
+                        </div>
+
+
+                        <div className="large-image">
+                            <img
+                                src="https://res.cloudinary.com/dgrrdy6sk/image/upload/v1787136899/3_1_wgqzip.png"
+                                alt="Mission 4"
+                            />
+                        </div>
+                    </aside>
+
+                    <main className="details-main">
+                        <p className="intro-copy">
+                            An upcoming systems programme bringing precise telemetry, redundant
+                            avionics and booster-section mechanisms together for future higher-apogee launches.
+                        </p>
+
+                        <div className="spec-block">
+                            <div className="spec-label">Mission Statement</div>
+                            <div className="spec-text">
+                                To develop & validate extremely precise, sophisticated & redundant
+                                Telemetry & Avionics systems with Booster section ejection, all combining
+                                to develop mechanisms for upcoming higher apogee launches.
+                            </div>
+                        </div>
+
+                        <div className="spec-block">
+                            <div className="spec-label">Technical Architecture</div>
+                            <div className="spec-text">Under development.</div>
+                        </div>
+
+                    </main>
+                </div>
+            </section>
+
+            {/* END */}
+            <section
+                className="end"
+                onPointerMove={trackLaunchPointer}
+            >
+                <FloatingParticles
+                    count={70}
+                    size={2}
+                    opacity={0.65}
+                    glow={12}
+                    speed={0.5}
+                    influence={150}
+                    color="#f2ede4"
+                />
+                <div>
                     <h2>
-                        Meet the<br />
-                        <em style={{ fontStyle: "italic" }}>Team.</em>
+                        Next
+                        <br />
+                        Launch.
                     </h2>
-                    <p>
-                        Twenty-three students across propulsion, structures, avionics and recovery.
-                        One shared obsession: getting something into the sky and safely back down.
-                    </p>
-                    <a href="/members" className="prj-final-btn">
-                        Meet the Team →
-                    </a>
-                    <div className="prj-final-footer">
-                        BMSCE Rocketry · Est. 2019 · Flying Higher Every Year
-                    </div>
-                </section>
-
-            </div>
+                    <p>Built independently · Ready for what is next</p>
+                </div>
+            </section>
         </>
     );
 }

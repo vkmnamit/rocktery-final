@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
+import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://bscerocketry.in"),
@@ -40,7 +42,9 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body>
+                <Navbar />
                 <PageTransition>{children}</PageTransition>
+                <SiteFooter />
             </body>
         </html>
     );

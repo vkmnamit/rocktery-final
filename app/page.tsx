@@ -1,18 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
 import Stars from "@/components/Stars";
 import AboutUs from "@/components/AboutUs";
-import { useEffect, useRef, useState } from "react";
-
-const HERO_LINES = ["Pushing", "Boundaries.", "Defying Gravity With Every Launch"];
+import { useEffect, useRef } from "react";
 
 export default function Home() {
     const heroTitleRef = useRef<HTMLHeadingElement>(null);
     const featureContentRef = useRef<HTMLDivElement>(null);
-    const [typedLines, setTypedLines] = useState<string[]>(["", "", ""]);
-    const [typingDone, setTypingDone] = useState(false);
 
     // Scroll parallax for giant text (moves left → right as you scroll through section)
     useEffect(() => {
@@ -66,37 +61,42 @@ export default function Home() {
         };
     }, []);
 
-    // Typing effect for hero title
+    // Scroll-linked blur for the big project-style headings
+    // (ABOUT US + Years of Experience) - sharp at center, blurrier on the way out
     useEffect(() => {
-        let lineIndex = 0;
-        let charIndex = 0;
-        let interval: ReturnType<typeof setInterval>;
+        const headings = Array.from(
+            document.querySelectorAll<HTMLElement>(".about-title, .sub-headline")
+        );
+        if (!headings.length) return;
 
-        const startTyping = () => {
-            interval = setInterval(() => {
-                const currentLine = HERO_LINES[lineIndex];
-                charIndex += 1;
-                setTypedLines((prev) => {
-                    const next = [...prev];
-                    next[lineIndex] = currentLine.slice(0, charIndex);
-                    return next;
-                });
+        let ticking = false;
 
-                if (charIndex >= currentLine.length) {
-                    charIndex = 0;
-                    lineIndex += 1;
-                    if (lineIndex >= HERO_LINES.length) {
-                        clearInterval(interval);
-                        setTypingDone(true);
-                    }
-                }
-            }, 45);
+        const update = () => {
+            ticking = false;
+            const vh = window.innerHeight;
+            headings.forEach((el) => {
+                const rect = el.getBoundingClientRect();
+                const center = rect.top + rect.height / 2;
+                const dist = Math.abs(center - vh / 2);
+                const t = Math.min(dist / (vh * 0.5), 1);
+                el.style.filter = `blur(${(t * 10).toFixed(1)}px)`;
+            });
         };
 
-        const timeout = setTimeout(startTyping, 300);
+        const handleScroll = () => {
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(update);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        window.addEventListener("resize", handleScroll);
+        update();
+
         return () => {
-            clearTimeout(timeout);
-            if (interval) clearInterval(interval);
+            window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("resize", handleScroll);
         };
     }, []);
 
@@ -149,6 +149,7 @@ export default function Home() {
                         if (entry.isIntersecting) {
                             featureContent.style.opacity = "1";
                             featureContent.style.transform = "translateY(0)";
+                            featureContent.classList.add("in-view");
                             observer.disconnect();
                         }
                     });
@@ -161,7 +162,6 @@ export default function Home() {
 
     return (
         <div className="page-wrapper">
-            <Navbar />
             <Stars />
             <main className="modern-layout">
                 <div className="cover-element" />
@@ -169,12 +169,11 @@ export default function Home() {
                 <section className="hero-split">
                     <div className="hero-left-content entrance-animation">
                         <h1 ref={heroTitleRef} className="hero-title">
-                            {typedLines[0]}
+                            Pushing
                             <br />
-                            {typedLines[1]}
+                            Boundaries.
                             <br />
-                            {typedLines[2]}
-                            <span className={`hero-caret${typingDone ? " done" : ""}`}>|</span>
+                            Defying Gravity With Every Launch
                         </h1>
                         <div className="hero-dot">●</div>
                     </div>
@@ -245,24 +244,24 @@ export default function Home() {
                 </section>
 
                 <section className="feature-split text-only">
-                    <div className="feature-content full-width">
+                    <div ref={featureContentRef} className="feature-content full-width">
                         <h2 className="sub-headline">
-                            5+ Years of Innovation &<br />
-                            Engineering Excellence.
+                            <span>5+ Years of Innovation &</span>
+                            <span>Engineering Excellence.</span>
                         </h2>
                         <p className="feature-desc">
                             To become a globally recognized student-led team known for engineering
                             excellence, inspiring young minds across India by demonstrating that hard
                             work leads to success.
                         </p>
-                        <Link className="pill-btn" href="/contact-us">
+                        <a className="pill-btn" href="mailto:rocketry@bmsce.ac.in">
                             CONTACT US
-                        </Link>
+                        </a>
                     </div>
                 </section>
             </main>
 
-            <footer className="footer">
+            <footer className="footer legacy-footer" aria-hidden="true">
                 <div className="footer-grid">
                     <div className="footer-col footer-brand">
                         <h3>BMSCE ROCKETRY</h3>
@@ -278,6 +277,7 @@ export default function Home() {
                         <a href="/members">Members</a>
                         <a href="/projects">Projects</a>
                         <a href="/sponsors">Sponsors</a>
+                        <a href="/media">Media</a>
                         <a href="/contact-us">Contact</a>
                     </div>
 

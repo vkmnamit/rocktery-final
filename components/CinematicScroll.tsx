@@ -296,7 +296,7 @@ function WaitlistSection() {
                 <p className={styles.waitlistEyebrow}>BMSCE Rocketry · Est. 2019</p>
                 <h2 className={styles.waitlistTitle}>Advancing Aerospace</h2>
                 <h2 className={styles.waitlistTitle}>Innovation</h2>
-                <a href="/contact-us" className={styles.waitlistBtn}>Join the Mission</a>
+                <a href="mailto:rocketry@bmsce.ac.in" className={styles.waitlistBtn}>Join the Mission</a>
             </div>
         </div>
     );

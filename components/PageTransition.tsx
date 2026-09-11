@@ -29,6 +29,21 @@ export default function PageTransition({ children }: { children: React.ReactNode
         const overlay = overlayRef.current;
         if (!wrapper || !overlay) return;
 
+        let fallbackTimer: ReturnType<typeof setTimeout> | undefined;
+
+        // Once the entrance transition ends, remove the transform entirely.
+        // A leftover transform on the wrapper would break position:fixed
+        // descendants (navbar / side menu / overlay) and make them overlap
+        // or scroll away with the page.
+        const clearTransform = () => {
+            wrapper.style.transform = "none";
+            wrapper.style.transition = "";
+            wrapper.removeEventListener("transitionend", clearTransform);
+            if (fallbackTimer) clearTimeout(fallbackTimer);
+        };
+        wrapper.addEventListener("transitionend", clearTransform);
+        fallbackTimer = setTimeout(clearTransform, 1200);
+
         // Page enter: overlay slides out revealing the page
         overlay.style.transform = "translateY(0%)";
         overlay.style.transition = "none";
@@ -45,6 +60,11 @@ export default function PageTransition({ children }: { children: React.ReactNode
                 wrapper.style.transform = "translateY(0px)";
             });
         });
+
+        return () => {
+            wrapper.removeEventListener("transitionend", clearTransform);
+            if (fallbackTimer) clearTimeout(fallbackTimer);
+        };
     }, [pathname]);
 
     return (
