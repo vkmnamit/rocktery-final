@@ -1,0 +1,185 @@
+/* Project-page style font reveal, reused across the whole home page.
+   Values mirror .mission-title / .intro-index / .details-page reveals exactly. */
+
+.home-reveal-title {
+    overflow: hidden;
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
+}
+
+/* Keep the mask even where section CSS sets overflow: visible (e.g. CTA heading) */
+.home-reference-cta h2.home-reveal-title {
+    overflow: hidden;
+}
+
+.home-reveal-title .home-reveal-line {
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    filter: blur(16px);
+    transform: translateY(120%) rotate(5deg);
+    transform-origin: left bottom;
+    transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), filter 0.75s ease, opacity 0.6s ease;
+    will-change: transform, filter;
+}
+
+.home-reveal.home-in-view .home-reveal-line,
+.home-reveal.home-in-view .home-reveal-title .home-reveal-line,
+.home-reveal-title.home-in-view .home-reveal-line,
+.home-in-view .about-title-line.home-reveal-line,
+.about-title-line.home-reveal-line.home-in-view {
+    visibility: visible;
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) rotate(0);
+}
+
+.home-reveal.home-in-view .home-reveal-line:nth-child(2),
+.home-reveal-title.home-in-view .home-reveal-line:nth-child(2),
+.home-in-view .about-title-line-2.home-reveal-line,
+.about-title-line-2.home-reveal-line.home-in-view {
+    transition-delay: 0.09s;
+}
+
+.home-reveal.home-in-view .home-reveal-line:nth-child(3),
+.home-reveal-title.home-in-view .home-reveal-line:nth-child(3) {
+    transition-delay: 0.18s;
+}
+
+/* Small index labels - same as project-page intro-index */
+.home-reveal-label {
+    visibility: hidden;
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(32px) rotate(3deg);
+    transform-origin: left bottom;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.7s ease, opacity 0.6s ease;
+}
+
+.home-reveal.home-in-view .home-reveal-label,
+.home-reveal-label.home-in-view,
+.home-in-view .about-index.home-reveal-label {
+    visibility: visible;
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) rotate(0);
+}
+
+/* Body copy, paragraphs, cards - same as project-page intro-copy / spec-block */
+.home-reveal-body {
+    visibility: hidden;
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(54px) rotate(1.5deg);
+    transform-origin: left bottom;
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), filter 0.75s ease, opacity 0.6s ease;
+}
+
+.home-reveal.home-in-view .home-reveal-body,
+.home-reveal-body.home-in-view,
+.home-in-view .about-lead.home-reveal-body,
+.home-in-view .about-item.home-reveal-body {
+    visibility: visible;
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) rotate(0);
+}
+
+/* Direct application: heading itself carries the line animation
+   (no inner spans needed) */
+h1.home-reveal-line,
+h2.home-reveal-line {
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    filter: blur(16px);
+    transform: translateY(120%) rotate(5deg);
+    transform-origin: left bottom;
+    transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), filter 0.75s ease, opacity 0.6s ease;
+    will-change: transform, filter;
+}
+
+.home-reveal.home-in-view h1.home-reveal-line,
+.home-reveal.home-in-view h2.home-reveal-line {
+    visibility: visible;
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) rotate(0);
+}
+
+/* Order: label first, then title lines, then body copy */
+.home-reveal.home-in-view .home-reveal-label,
+.home-reveal-label.home-in-view {
+    transition-delay: 0s;
+}
+
+.home-reveal.home-in-view .home-reveal-body,
+.home-reveal-body.home-in-view {
+    transition-delay: 0.16s;
+}
+
+/* Stagger siblings that enter together, like project-page spec-block delays.
+   A following wrapper uses :nth-of-type so intervening <p>/<div> elements
+   don't shift the count the way plain nth-child would. */
+.home-reveal-body.home-in-view ~ .home-reveal-body.home-in-view:nth-of-type(2),
+.home-reveal.home-in-view article.home-reveal-body:nth-child(2) {
+    transition-delay: 0.24s;
+}
+
+.home-reveal-body.home-in-view ~ .home-reveal-body.home-in-view:nth-of-type(3),
+.home-reveal.home-in-view article.home-reveal-body:nth-child(3) {
+    transition-delay: 0.32s;
+}
+
+.home-reveal-body.home-in-view ~ .home-reveal-body.home-in-view:nth-of-type(4),
+.home-reveal.home-in-view article.home-reveal-body:nth-child(4) {
+    transition-delay: 0.4s;
+}
+
+/* About grid keeps project-page stagger rhythm (later than lead copy) */
+.home-in-view .about-lead.home-reveal-body {
+    transition-delay: 0.08s;
+}
+
+.home-in-view .about-item.home-reveal-body:nth-child(1) {
+    transition-delay: 0.16s;
+}
+
+.home-in-view .about-item.home-reveal-body:nth-child(2) {
+    transition-delay: 0.24s;
+}
+
+.home-in-view .about-item.home-reveal-body:nth-child(3) {
+    transition-delay: 0.32s;
+}
+
+.home-in-view .about-item.home-reveal-body:nth-child(4) {
+    transition-delay: 0.4s;
+}
+
+/* Stagger cards inside grids, like project-page spec-block delays */
+.home-reveal.home-in-view article.home-reveal-body:nth-child(2) {
+    transition-delay: 0.24s;
+}
+
+.home-reveal.home-in-view article.home-reveal-body:nth-child(3) {
+    transition-delay: 0.32s;
+}
+
+.home-reveal.home-in-view article.home-reveal-body:nth-child(4) {
+    transition-delay: 0.4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-reveal-title .home-reveal-line,
+    h1.home-reveal-line,
+    h2.home-reveal-line,
+    .home-reveal-label,
+    .home-reveal-body {
+        visibility: visible !important;
+        transition: none !important;
+        opacity: 1 !important;
+        filter: none !important;
+        transform: none !important;
+    }
+}

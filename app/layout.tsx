@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import SiteFooter from "@/components/SiteFooter";
+import "@/components/HomeNavbar.css";
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://bscerocketry.in"),

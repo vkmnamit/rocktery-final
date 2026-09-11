@@ -406,40 +406,57 @@ a {
     align-items: center;
     justify-content: center;
     padding: 40px 5vw;
-    background: transparent;
-    color: #fff;
+    background: #e8dcc5;
+    color: #111;
     overflow: hidden;
     perspective: 1200px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-/* Smooth unique transition: About section fades in with blur + scale as it enters */
+/* About section enters with a simple fade only - the FONT reveal
+   (blur-rise lines) is the star, exactly like the project page */
 .about-us-section {
     opacity: 0;
-    transform: translateY(60px) scale(0.95);
-    filter: blur(10px);
-    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .about-us-section.about-in-view {
     opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
 }
 
 .about-content {
     width: 100%;
     max-width: 1400px;
     opacity: 0;
-    filter: blur(16px);
-    transform: scale(0.98);
-    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .about-in-view .about-content {
     opacity: 1;
+}
+
+/* Small index label above title - EXACT project-page intro-index style */
+.about-index {
+    position: relative;
+    margin-bottom: clamp(16px, 3vh, 28px);
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #111;
+    visibility: hidden;
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(32px) rotate(3deg);
+    transform-origin: left bottom;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.7s ease, opacity 0.6s ease;
+}
+
+.about-in-view .about-index {
+    visibility: visible;
+    opacity: 0.55;
     filter: blur(0);
-    transform: scale(1);
+    transform: translateY(0) rotate(0);
 }
 
 /* Section is blurred & invisible until scrolled into view */
@@ -447,7 +464,11 @@ a {
     filter: blur(0);
 }
 
-/* Title lines - project-page style: heavy uppercase blur-rise reveal */
+/* Title lines - EXACT project-page mission-title style: masked blur-rise line reveal */
+.about-title {
+    overflow: hidden;
+    max-width: 1400px;
+}
 .about-title-line {
     display: block;
     font-size: clamp(3rem, 9vw, 11rem);
@@ -484,22 +505,25 @@ a {
 }
 
 .about-lead {
-    font-size: 1.4rem;
-    color: #ccc;
-    line-height: 1.6;
-    max-width: 700px;
-    font-weight: 300;
+    font-size: clamp(1.08rem, 1.55vw, 1.42rem);
+    color: #444;
+    line-height: 1.78;
+    max-width: 740px;
+    font-weight: 600;
+    visibility: hidden;
     opacity: 0;
-    transform: translateZ(0) scale(1.15);
-    filter: blur(8px);
-    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 1s cubic-bezier(0.16, 1, 0.3, 1), filter 1s cubic-bezier(0.16, 1, 0.3, 1);
+    filter: blur(12px);
+    transform: translateY(54px) rotate(1.5deg);
+    transform-origin: left bottom;
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), filter 0.75s ease, opacity 0.6s ease;
 }
 
 .about-in-view .about-lead {
+    visibility: visible;
     opacity: 1;
-    transform: translateZ(0) scale(1);
     filter: blur(0);
-    transition-delay: 0.7s;
+    transform: translateY(0) rotate(0);
+    transition-delay: 0.08s;
 }
 
 /* Brief text items - also zoom in toward viewer */
@@ -507,37 +531,40 @@ a {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 40px 60px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
     padding-top: 45px;
 }
 
 .about-item {
+    visibility: hidden;
     opacity: 0;
-    transform: translateZ(0) scale(1.2);
-    filter: blur(6px);
-    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    filter: blur(12px);
+    transform: translateY(54px) rotate(1.5deg);
+    transform-origin: left bottom;
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), filter 0.75s ease, opacity 0.6s ease;
 }
 
 .about-in-view .about-item {
+    visibility: visible;
     opacity: 1;
-    transform: translateZ(0) scale(1);
     filter: blur(0);
+    transform: translateY(0) rotate(0);
 }
 
 .about-in-view .about-item:nth-child(1) {
-    transition-delay: 0.9s;
+    transition-delay: 0.16s;
 }
 
 .about-in-view .about-item:nth-child(2) {
-    transition-delay: 1.1s;
+    transition-delay: 0.24s;
 }
 
 .about-in-view .about-item:nth-child(3) {
-    transition-delay: 1.3s;
+    transition-delay: 0.32s;
 }
 
 .about-in-view .about-item:nth-child(4) {
-    transition-delay: 1.5s;
+    transition-delay: 0.4s;
 }
 
 .about-item-title {
@@ -546,12 +573,12 @@ a {
     letter-spacing: 2px;
     margin-bottom: 12px;
     text-transform: uppercase;
-    color: #fff;
+    color: #111;
 }
 
 .about-item-desc {
     font-size: 1.05rem;
-    color: #aaa;
+    color: #555;
     line-height: 1.6;
     max-width: 520px;
 }
