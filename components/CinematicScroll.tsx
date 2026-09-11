@@ -59,7 +59,6 @@ function useScrollRadius(
             if (triggerRef.current && panelRef.current) {
                 const rect = triggerRef.current.getBoundingClientRect();
                 const vh = window.innerHeight;
-                // progress 0 (bottom of viewport) → 1 (top of viewport)
                 const progress = Math.max(0, Math.min(1, 1 - rect.top / vh));
                 const radius = (1 - progress) * 1000;
                 panelRef.current.style.borderTopLeftRadius = `${radius}px`;
@@ -108,13 +107,13 @@ function ParallaxImage({
 export default function CinematicScroll() {
     const { smoothX, smoothY } = useMouseParallax();
 
-    const firstPanelRef  = useRef<HTMLDivElement>(null);
+    const firstPanelRef    = useRef<HTMLDivElement>(null);
     const firstTriggerRef  = useRef<HTMLDivElement>(null);
 
     const secondPanelRef   = useRef<HTMLDivElement>(null);
-    const secondTriggerRef  = useRef<HTMLDivElement>(null);
+    const secondTriggerRef = useRef<HTMLDivElement>(null);
 
-    const thirdPanelRef  = useRef<HTMLDivElement>(null);
+    const thirdPanelRef    = useRef<HTMLDivElement>(null);
     const thirdTriggerRef  = useRef<HTMLDivElement>(null);
 
     useScrollRadius(firstTriggerRef, firstPanelRef);
@@ -124,22 +123,22 @@ export default function CinematicScroll() {
     return (
         <main className={styles.root}>
 
-            {/* ── HERO TEXT SECTION ──────────────────────────────── */}
+            {/* HERO */}
             <div className={styles.heroSection}>
                 <div className={styles.heroFixed}>
                     <div className={styles.heroText}>
-                        <h1 className={styles.heroLine}>The Future</h1>
+                        <h1 className={styles.heroLine}>The Sky Was</h1>
                         <h1 className={styles.heroLine}>
-                            Was Already
+                            Never Built
                             <ParallaxImage
-                                src="https://images.kadeandco.xyz/soln_bg.webp"
-                                alt=""
+                                src="/imgs/1.png"
+                                alt="AURORA rocket"
                                 factorX={14} factorY={10}
                                 smoothX={smoothX} smoothY={smoothY}
                                 className={styles.floatBetweenLines}
                             />
                         </h1>
-                        <h1 className={styles.heroLine}>Written</h1>
+                        <h1 className={styles.heroLine}>For Us</h1>
                     </div>
                     <div className={styles.arrowWrap}>
                         <svg className={styles.arrow} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -149,41 +148,41 @@ export default function CinematicScroll() {
                 </div>
             </div>
 
-            {/* ── 1ST PILL TRIGGER: light → dark ────────────────── */}
+            {/* 1ST PILL: white -> dark */}
             <div ref={firstTriggerRef} className={styles.pillTrigger}>
                 <div ref={firstPanelRef} className={`${styles.pillPanel} ${styles.dark}`} />
             </div>
 
-            {/* ── PROBLEM SECTION (dark) ────────────────────────── */}
+            {/* PROBLEM SECTION (dark) */}
             <ProblemSection smoothX={smoothX} smoothY={smoothY} />
 
-            {/* ── SPACER STICKY (dark) ──────────────────────────── */}
+            {/* SPACER */}
             <div className={styles.stickyDark} />
 
-            {/* ── 2ND PILL TRIGGER: dark → light ────────────────── */}
+            {/* 2ND PILL: dark -> white */}
             <div className={styles.pillTriggerWrap}>
                 <div ref={secondTriggerRef} className={styles.pillTriggerSensor} />
                 <div ref={secondPanelRef} className={`${styles.pillPanel} ${styles.light}`} />
             </div>
 
-            {/* ── DIALOG SECTION (light) ────────────────────────── */}
+            {/* DIALOG SECTION (white) */}
             <DialogSection smoothX={smoothX} smoothY={smoothY} />
 
-            {/* ── SPACER STICKY (light) ─────────────────────────── */}
+            {/* SPACER */}
             <div className={styles.stickyLight} />
 
-            {/* ── 3RD PILL TRIGGER: light → dark ────────────────── */}
+            {/* 3RD PILL: white -> dark */}
             <div ref={thirdTriggerRef} className={styles.pillTrigger}>
                 <div ref={thirdPanelRef} className={`${styles.pillPanel} ${styles.dark}`} />
             </div>
 
-            {/* ── SOLUTION CARDS SECTION (dark, sticky) ─────────── */}
+            {/* SUBSYSTEM CARDS (dark) */}
             <SolutionSection />
 
-            {/* ── SHORT SPACER STICKY ───────────────────────────── */}
+            {/* HALF SPACER */}
             <div className={styles.stickyHalf} />
 
-            {/* ── WAITLIST / CTA ────────────────────────────────── */}
+            {/* CTA */}
             <WaitlistSection />
         </main>
     );
@@ -198,24 +197,24 @@ function ProblemSection({
             <div className={styles.sectionInner}>
                 <h1 className={styles.sectionLine}>
                     <ParallaxImage
-                        src="https://images.kadeandco.xyz/field.webp"
-                        alt=""
+                        src="/imgs/2.png"
+                        alt="PHOENIX rocket"
                         factorX={10} factorY={8}
                         smoothX={smoothX} smoothY={smoothY}
                         className={styles.floatLeft}
                     />
-                    Complex Engineering
+                    Supersonic Speeds
                 </h1>
-                <h1 className={styles.sectionLine}>Uncharted Skies</h1>
+                <h1 className={styles.sectionLine}>Complex Airframes</h1>
                 <h1 className={styles.sectionLine}>
                     <ParallaxImage
-                        src="https://images.kadeandco.xyz/dollar.webp"
-                        alt=""
+                        src="/imgs/4.png"
+                        alt="TITAN engine"
                         factorX={-14} factorY={12}
                         smoothX={smoothX} smoothY={smoothY}
                         className={styles.floatRight}
                     />
-                    Infinite Ambition
+                    Liquid Propulsion
                 </h1>
             </div>
         </div>
@@ -233,8 +232,8 @@ function DialogSection({
                 <h1 className={`${styles.sectionLine} ${styles.darkText}`}>
                     A Bigger
                     <ParallaxImage
-                        src="https://images.kadeandco.xyz/dialog2.jpeg"
-                        alt=""
+                        src="/imgs/3.png"
+                        alt="HELIOS rocket"
                         factorX={12} factorY={9}
                         smoothX={smoothX} smoothY={smoothY}
                         className={styles.floatBetweenLines}
@@ -246,24 +245,24 @@ function DialogSection({
     );
 }
 
-/* ─── Solution cards section ─────────────────────────────────────── */
+/* ─── Subsystem cards section ─────────────────────────────────────── */
 function SolutionSection() {
     const cards = [
         {
-            img: "https://images.kadeandco.xyz/scard1.svg",
-            desc: "Student-built propulsion systems tested to the limits of physics.",
+            title: "AEROSTRUCTURE",
+            desc: "Precision-engineered composite airframes for aerodynamic stability under high-g supersonic loads.",
         },
         {
-            img: "https://images.kadeandco.xyz/scard2.svg",
-            desc: "Precision flight computers with real-time telemetry and recovery.",
+            title: "PROPULSION",
+            desc: "Custom solid motors with optimised grain geometry delivering precise thrust curves for each mission.",
         },
         {
-            img: "https://images.kadeandco.xyz/scard3.svg",
-            desc: "Custom avionics designed, soldered and coded by the team.",
+            title: "AVIONICS",
+            desc: "Redundant flight computers & long-range telemetry monitoring altitude, GPS and orientation in real-time.",
         },
         {
-            img: "https://images.kadeandco.xyz/scard4.svg",
-            desc: "Aerodynamic research grounded in CFD and wind-tunnel validation.",
+            title: "RECOVERY",
+            desc: "Dual-deployment drogue and main parachute systems triggered autonomously for a precision touchdown.",
         },
     ];
 
@@ -271,7 +270,8 @@ function SolutionSection() {
         <div className={`${styles.solutionSection} ${styles.stickyTop}`}>
             {cards.map((c, i) => (
                 <div key={i} className={styles.card}>
-                    <Image src={c.img} alt="Card" width={300} height={400} className={styles.cardImg} />
+                    <div className={styles.cardNumber}>{String(i + 1).padStart(2, "0")}</div>
+                    <h3 className={styles.cardTitle}>{c.title}</h3>
                     <p className={styles.cardDesc}>{c.desc}</p>
                 </div>
             ))}
@@ -279,26 +279,25 @@ function SolutionSection() {
     );
 }
 
-/* ─── Waitlist / CTA section ─────────────────────────────────────── */
+/* ─── CTA section ────────────────────────────────────────────────── */
 function WaitlistSection() {
     return (
         <div className={styles.waitlistSection}>
             <Image
-                src="https://images.kadeandco.xyz/dialog.jpeg"
-                alt=""
-                width={1672}
-                height={941}
+                src="/imgs/8.png"
+                alt="BMSCE Rocketry launch"
+                width={1920}
+                height={1080}
                 className={styles.waitlistBg}
                 priority
             />
             <div className={styles.waitlistOverlay} />
             <div className={styles.waitlistContent}>
-                <p className={styles.waitlistEyebrow}>BSCE Rocketry</p>
+                <p className={styles.waitlistEyebrow}>BMSCE Rocketry · Est. 2019</p>
                 <h2 className={styles.waitlistTitle}>Advancing Aerospace</h2>
                 <h2 className={styles.waitlistTitle}>Innovation</h2>
-                <a href="/contact-us" className={styles.waitlistBtn}>Get In Touch</a>
+                <a href="/contact-us" className={styles.waitlistBtn}>Join the Mission</a>
             </div>
         </div>
     );
 }
-
