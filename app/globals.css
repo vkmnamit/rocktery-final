@@ -121,6 +121,18 @@ a {
     transition: 0.3s;
 }
 
+/* Higher-contrast mobile menu control. */
+.hamburger {
+    width: 25px;
+    height: 16px;
+}
+
+.hamburger span {
+    height: 3px;
+    background: #fff;
+    box-shadow: 0 0 7px rgba(255,255,255,.55);
+}
+
 .hamburger.active span:first-child {
     transform: rotate(45deg) translate(5px, 5px);
 }

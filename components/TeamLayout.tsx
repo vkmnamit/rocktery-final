@@ -152,9 +152,7 @@ export default function TeamLayout() {
                     })}
                     {active && (
                         <aside className="profile-panel" style={{ "--profile-top": `${profileTop}px` } as CSSProperties}>
-                            <button className="profile-close" onClick={() => setActiveIndex(null)} aria-label="Back to team list">
-                                <span aria-hidden="true">←</span> Back
-                            </button>
+                            <button className="profile-close" onClick={() => setActiveIndex(null)} aria-label="Close member profile">×</button>
                             <div className="profile-photo">
                                 {active.photo ? (
                                     <img className="profile-photo-img" src={active.photo} alt={active.name} />
