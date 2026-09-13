@@ -9,19 +9,10 @@ export default function PageTransition({ children }: { children: React.ReactNode
     const wrapperRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
 
-    // Global slow scroll — slows wheel scroll across the whole site
-    useEffect(() => {
-        const onWheel = (e: WheelEvent) => {
-            e.preventDefault();
-            window.scrollBy({
-                top: e.deltaY * 0.4,
-                behavior: "auto",
-            });
-        };
-
-        window.addEventListener("wheel", onWheel, { passive: false });
-        return () => window.removeEventListener("wheel", onWheel);
-    }, []);
+    // NOTE: no custom wheel handler — native browser scrolling is kept
+    // so laptop trackpads get full-speed smooth momentum scrolling.
+    // (A previous version multiplied every wheel delta by 0.4, which made
+    // trackpad scrolling feel sticky and ~2.5x too slow.)
 
     // Page transition on route change
     useEffect(() => {
