@@ -1,5 +1,23 @@
 import type { Metadata } from "next";
+import { Archivo_Black, Climate_Crisis } from "next/font/google";
 import "./globals.css";
+
+/* Self-hosted display fonts. next/font downloads them at build time, serves
+   them from the same origin with preloaded <link>s and generates a
+   size-adjusted fallback, so headings render identically on every visit and
+   every device — no flash of a different font while the file downloads. */
+const climateCrisis = Climate_Crisis({
+    subsets: ["latin"],
+    variable: "--font-climate",
+    display: "swap",
+});
+
+const archivoBlack = Archivo_Black({
+    weight: "400",
+    subsets: ["latin"],
+    variable: "--font-archivo",
+    display: "swap",
+});
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import SiteFooter from "@/components/SiteFooter";
@@ -41,7 +59,10 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
+        <html
+    lang="en"
+    className={`${climateCrisis.variable} ${archivoBlack.variable}`}
+>
             <body>
                 <Navbar />
                 <PageTransition>{children}</PageTransition>

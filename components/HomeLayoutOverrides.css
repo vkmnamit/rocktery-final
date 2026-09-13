@@ -10,3 +10,9 @@
 .home-reference-intro h2, .home-reference-impact h2, .home-reference-work h2, .home-reference-missions h2 { font-size: clamp(2.8rem, 5.5vw, 6rem); line-height: .94; }
 @media (max-width: 650px) { .home-reference-hero h1 { font-size: 17vw; } }
 @media (max-width: 650px) { .home-reference-intro h2, .home-reference-impact h2, .home-reference-work h2, .home-reference-missions h2 { font-size: clamp(2.4rem, 10vw, 4rem); line-height: .98; } }
+
+/* Very small phones: the wide display face must stay inside the viewport. */
+@media (max-width: 420px) {
+    .home-reference-hero h1 { font-size: 14.5vw; letter-spacing: -.005em; }
+    .home-reference-hero h1 .home-reveal-line { white-space: nowrap; overflow: hidden; }
+}

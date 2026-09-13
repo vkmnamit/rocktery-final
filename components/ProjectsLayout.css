@@ -41,13 +41,13 @@ body {
 }
 
 .nav strong {
-  font-size: 15px;
+  font-size:var(--fs-15);
   font-weight: 900;
   letter-spacing: -.035em
 }
 
 .nav span {
-  font-size: 9px;
+  font-size:var(--fs-9);
   font-weight: 900;
   letter-spacing: .2em;
   text-transform: uppercase
@@ -112,7 +112,7 @@ body {
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 9px;
+  font-size:var(--fs-9);
   font-weight: 900;
   letter-spacing: .2em;
   text-transform: uppercase;
@@ -137,7 +137,7 @@ body {
   left: auto;
   top: auto;
   margin-bottom: clamp(16px, 3vh, 28px);
-  font-size: 9px;
+  font-size:var(--fs-9);
   font-weight: 900;
   letter-spacing: .2em;
   text-transform: uppercase;
@@ -240,7 +240,7 @@ body {
 }
 
 .details-number {
-  font-size: 12px;
+  font-size:var(--fs-12);
   font-weight: 900;
   letter-spacing: .2em;
   text-transform: uppercase;
@@ -257,8 +257,8 @@ body {
   overflow-wrap: break-word;
 }
 
-.launch-countdown{display:flex;justify-content:center;gap:clamp(14px,3vw,42px);margin-top:38px}.launch-countdown>div{display:grid;gap:7px;text-align:center}.launch-countdown strong{font:900 clamp(2rem,5vw,5rem)/.82 var(--font-druk,"Druk Wide","Arial Black",sans-serif);letter-spacing:-.06em}.launch-countdown span,.launch-date{font:9px "DM Mono",monospace;letter-spacing:.14em;text-transform:uppercase;opacity:.58}.launch-date{display:block;margin-top:23px}
-@media(max-width:560px){.launch-countdown{gap:13px}.launch-countdown strong{font-size:2.15rem}.launch-countdown span{font-size:7px}}
+.launch-countdown{display:flex;justify-content:center;gap:clamp(14px,3vw,42px);margin-top:38px}.launch-countdown>div{display:grid;gap:7px;text-align:center}.launch-countdown strong{font:900 clamp(2rem,5vw,5rem)/.82 var(--font-druk,"Druk Wide","Arial Black",sans-serif);letter-spacing:-.06em}.launch-countdown span,.launch-date{font:var(--fs-9) "DM Mono",monospace;letter-spacing:.14em;text-transform:uppercase;opacity:.58}.launch-date{display:block;margin-top:23px}
+@media(max-width:560px){.launch-countdown{gap:13px}.launch-countdown strong{font-size:var(--fs-35)}.launch-countdown span{font-size:var(--fs-7)}}
 
 .side-line {
   width: 90px;
@@ -269,7 +269,7 @@ body {
 }
 
 .side-meta {
-  font-size: 10px;
+  font-size:var(--fs-10);
   line-height: 1.9;
   font-weight: 800;
   letter-spacing: .12em;
@@ -302,7 +302,7 @@ body {
 }
 
 .spec-label {
-  font-size: 10px;
+  font-size:var(--fs-10);
   font-weight: 900;
   letter-spacing: .2em;
   text-transform: uppercase;
@@ -433,7 +433,7 @@ body {
 
 .end p {
   margin-top: 28px;
-  font-size: 9px;
+  font-size:var(--fs-9);
   font-weight: 900;
   letter-spacing: .2em;
   text-transform: uppercase;
@@ -496,7 +496,7 @@ body {
   }
 
   .spec-text {
-    font-size: 1rem;
+    font-size:var(--fs-16);
     line-height: 1.7
   }
 }
@@ -556,11 +556,11 @@ body {
 .mission-title h2 {
   font-family: var(--font-zade, "Climate Crisis", "Druk Wide", "Arial Black", sans-serif) !important;
   font-weight: 400;
-  line-height: 1;
+  line-height: 1.12;
   letter-spacing: .045em;
   word-spacing: .12em;
   overflow: visible;
-  padding: .06em 0 .12em
+  padding: .1em 0 .14em
 }
 
 @media(max-width:850px) {
@@ -588,13 +588,19 @@ body {
   }
 }
 
+/* Each chapter wrapper is the containing block for its sticky mission title,
+   so titles pin only while their own chapter is on screen (mirrors sponsors). */
+.project-chapter {
+  position: relative
+}
+
 /* Sized so the widest heading line (e.g. "DEVELOPMENT", "Lumos S3P3.")
    fits on one line on every screen: no overflow, no wrap and no gap. */
 .mission-title h2 {
-  font-size: clamp(2rem, min(5.7vw, 9vh), 6.4rem);
+  font-size: clamp(2rem, min(6.4vw, 9.5vh), 7rem);
   letter-spacing: .045em;
   word-spacing: .12em;
-  line-height: 1;
+  line-height: 1.12;
   max-width: 100%
 }
 
@@ -610,8 +616,9 @@ body {
 
 @media(max-width:850px) {
   .mission-title h2 {
-    font-size: clamp(1.8rem, 9vw, 3.7rem);
-    line-height: 1.02
+    font-size: clamp(1.5rem, 7.4vw, 3.8rem);
+    letter-spacing: .02em;
+    line-height: 1.12
   }
 
   .details-side h3 {

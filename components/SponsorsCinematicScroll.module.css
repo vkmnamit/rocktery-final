@@ -117,7 +117,7 @@
 .storyItem.visible.posCenter { transform: translate(-50%, -50%) scale(1); }
 
 .storyNumber {
-    font-size: 9px;
+    font-size:var(--fs-9);
     letter-spacing: 5px;
     opacity: .55;
     margin-bottom: 15px;
@@ -133,7 +133,7 @@
 }
 
 .storyDescription {
-    font-size: 10px;
+    font-size:var(--fs-10);
     line-height: 1.8;
     letter-spacing: 1px;
     max-width: 290px;
@@ -151,7 +151,7 @@
 .counter span {
     display: block;
     margin: 15px 0;
-    font-size: 10px;
+    font-size:var(--fs-10);
     letter-spacing: 3px;
     opacity: .2;
     transition: opacity .5s ease, transform .6s cubic-bezier(.16,1,.3,1);
@@ -168,12 +168,12 @@
     bottom: 8%;
     z-index: 800;
     writing-mode: vertical-rl;
-    font-size: 9px;
+    font-size:var(--fs-9);
     letter-spacing: 4px;
     opacity: .45;
 }
 
 @media(max-width:700px) {
     .storyItem { width: 235px; }
-    .storyTitle { font-size: 35px; }
+    .storyTitle { font-size:var(--fs-35); }
 }

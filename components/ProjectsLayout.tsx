@@ -108,6 +108,7 @@ export default function Home() {
             </section>
 
             {/* PROJECT 01 — cream wipes over the black hero */}
+            <div className="project-chapter">
             <section
                 className="wipe"
                 style={{ "--fill": "#f2ede4" } as CSSProperties}
@@ -202,7 +203,9 @@ export default function Home() {
                     </main>
                 </div>
             </section>
+            </div>
             {/* PROJECT 02 — black wipes over the cream */}
+            <div className="project-chapter">
             <section
                 className="wipe"
                 style={{ "--fill": "#151515" } as CSSProperties}
@@ -289,7 +292,9 @@ export default function Home() {
                     </main>
                 </div>
             </section>
+            </div>
             {/* PROJECT 03 — cream wipes over the black */}
+            <div className="project-chapter">
             <section
                 className="wipe"
                 style={{ "--fill": "#f2ede4" } as CSSProperties}
@@ -366,7 +371,9 @@ export default function Home() {
                     </main>
                 </div>
             </section>
+            </div>
             {/* PROJECT 04 — black wipes over the cream */}
+            <div className="project-chapter">
             <section
                 className="wipe"
                 style={{ "--fill": "#151515" } as CSSProperties}
@@ -442,6 +449,7 @@ export default function Home() {
                     </main>
                 </div>
             </section>
+            </div>
 
             {/* END */}
             <section
