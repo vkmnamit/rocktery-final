@@ -1,3 +1,16 @@
+@font-face {
+    font-family: "Druk Wide";
+    src: url("/fonts/DrukWide-Bold.woff2") format("woff2"), url("/fonts/DrukWide-Bold.woff") format("woff");
+    font-weight: 700 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --font-druk: "Druk Wide", "Archivo Black", "Arial Black", sans-serif;
+    --font-zade: "Climate Crisis", "Druk Wide", "Archivo Black", "Arial Black", sans-serif;
+}
+
 html,
 body {
     width: 100%;
@@ -8,6 +21,29 @@ body {
     color: #fff;
     margin: 0;
     padding: 0;
+}
+
+/* Shared reading rhythm: display headings stay compact; supporting text,
+   controls and labels gain enough breathing room across the site. */
+body { letter-spacing: .012em; }
+:where(p, li) { letter-spacing: .018em; word-spacing: .045em; }
+:where(a, button, input, textarea, select) { letter-spacing: .025em; }
+:where(h1, h2, h3, h4) { word-spacing: .06em; }
+
+/* Zade is the site's display face: reserve it for the large, uppercase
+   editorial headings, while body copy and interface text retain the sans. */
+:where(h1, h2) {
+    font-family: var(--font-zade) !important;
+    font-weight: 400 !important;
+    letter-spacing: .012em !important;
+    word-spacing: .1em !important;
+}
+
+:where(.details-side h3, .sponsor-side h3) {
+    font-family: var(--font-zade);
+    font-weight: 400;
+    letter-spacing: .012em;
+    word-spacing: .1em;
 }
 
 .section,
@@ -488,6 +524,18 @@ a {
     margin-bottom: -0.05em;
 }
 
+/* Keep the Zade About display title readable rather than letting its wide
+   character shapes overlap at phone and desktop widths. */
+.about-title-line {
+    font-size: clamp(2.7rem, 5.7vw, 6.2rem);
+    line-height: .94;
+    letter-spacing: .025em;
+}
+
+@media (max-width: 650px) {
+    .about-title-line { font-size: clamp(2.3rem, 11vw, 4.1rem); line-height: .98; }
+}
+
 .about-in-view .about-title-line {
     visibility: visible;
     opacity: 1;
@@ -589,6 +637,13 @@ a {
         gap: 28px;
     }
 }
+
+/* Progressive Zade-style lens blur at the lower viewport edge. */
+.page-bottom-blur{position:fixed;z-index:100;right:0;bottom:0;left:0;height:28vh;pointer-events:none;overflow:hidden}
+.page-bottom-blur i{position:absolute;inset:0;display:block;-webkit-backdrop-filter:blur(var(--page-blur));backdrop-filter:blur(var(--page-blur));-webkit-mask-image:linear-gradient(to bottom,transparent var(--page-start),#000 var(--page-middle),transparent var(--page-end));mask-image:linear-gradient(to bottom,transparent var(--page-start),#000 var(--page-middle),transparent var(--page-end))}
+.page-bottom-blur i:nth-child(1){--page-blur:1px;--page-start:0%;--page-middle:28%;--page-end:50%}.page-bottom-blur i:nth-child(2){--page-blur:3px;--page-start:20%;--page-middle:48%;--page-end:67%}.page-bottom-blur i:nth-child(3){--page-blur:7px;--page-start:40%;--page-middle:66%;--page-end:82%}.page-bottom-blur i:nth-child(4){--page-blur:16px;--page-start:60%;--page-middle:82%;--page-end:96%}.page-bottom-blur i:nth-child(5){--page-blur:32px;--page-start:76%;--page-middle:100%;--page-end:115%}
+@media(max-width:700px){.page-bottom-blur{height:20vh}}
+@media(prefers-reduced-motion:reduce){.page-bottom-blur{display:none}}
 
 /* ============ SUBSYSTEMS BENTO ============ */
 .subsystems-bento {

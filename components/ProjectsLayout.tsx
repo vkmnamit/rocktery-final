@@ -1,11 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import FloatingParticles from "./FloatingParticles";
 import "./ProjectsLayout.css";
 
+const launchDate = new Date("2026-10-30T00:00:00+05:30").getTime();
+const getLaunchTime = () => {
+    const total = Math.max(0, launchDate - Date.now());
+    return {
+        days: Math.floor(total / 86_400_000),
+        hours: Math.floor((total / 3_600_000) % 24),
+        minutes: Math.floor((total / 60_000) % 60),
+        seconds: Math.floor((total / 1_000) % 60),
+    };
+};
+
 export default function Home() {
+    const [launchTime, setLaunchTime] = useState(getLaunchTime);
     useEffect(() => {
         const wipes = Array.from(
             document.querySelectorAll<HTMLElement>(".wipe")
@@ -62,6 +74,11 @@ export default function Home() {
             if (raf) cancelAnimationFrame(raf);
             observer.disconnect();
         };
+    }, []);
+
+    useEffect(() => {
+        const interval = window.setInterval(() => setLaunchTime(getLaunchTime()), 1_000);
+        return () => window.clearInterval(interval);
     }, []);
 
     const trackLaunchPointer = (event: React.PointerEvent<HTMLElement>) => {
@@ -447,6 +464,10 @@ export default function Home() {
                         Launch.
                     </h2>
                     <p>Built independently · Ready for what is next</p>
+                    <div className="launch-countdown" aria-label="Countdown to 30 October 2026">
+                        {Object.entries(launchTime).map(([label, value]) => <div key={label}><strong>{String(value).padStart(2, "0")}</strong><span>{label}</span></div>)}
+                    </div>
+                    <small className="launch-date">Target launch · 30 Oct 2026</small>
                 </div>
             </section>
         </>

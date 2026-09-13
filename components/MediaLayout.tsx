@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import "./MediaLayout.css";
 import "./MediaLayoutOverrides.css";
 
@@ -23,6 +26,13 @@ const heroPhoto = "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1781355125
 
 export default function MediaLayout() {
     const loopPhotos = photos.slice(0, 6);
+    const [selectedPhoto, setSelectedPhoto] = useState<{ src: string; alt: string } | null>(null);
+
+    useEffect(() => {
+        const closeOnEscape = (event: KeyboardEvent) => event.key === "Escape" && setSelectedPhoto(null);
+        window.addEventListener("keydown", closeOnEscape);
+        return () => window.removeEventListener("keydown", closeOnEscape);
+    }, []);
 
     return (
         <main className="media-page">
@@ -40,16 +50,18 @@ export default function MediaLayout() {
             <section className="media-motion">
                 <p className="media-kicker">02 / Moments in motion — hover to pause</p>
                 <div className="media-track">
-                    {[...loopPhotos, ...loopPhotos].map((photo, index) => <article className={`media-card${index % 3 === 0 ? " media-card-wide" : ""}`} key={`${photo}-${index}`}><img src={photo} alt={`Rocketry event moment ${index % loopPhotos.length + 1}`} /><div><b>{["Launch day", "The makers", "Mission control", "Engineering", "In the field", "Together"][index % loopPhotos.length]}</b><span>Visual archive / 2026</span></div></article>)}
+                    {[...loopPhotos, ...loopPhotos].map((photo, index) => { const alt = `Rocketry event moment ${index % loopPhotos.length + 1}`; return <article className={`media-card${index % 3 === 0 ? " media-card-wide" : ""}`} key={`${photo}-${index}`}><button type="button" onClick={() => setSelectedPhoto({ src: photo, alt })} aria-label={`View ${alt}`}><img src={photo} alt={alt} /><div><b>{["Launch day", "The makers", "Mission control", "Engineering", "In the field", "Together"][index % loopPhotos.length]}</b><span>Visual archive / 2026</span></div></button></article>; })}
                 </div>
             </section>
 
             <section className="media-archive">
                 <header><h2>Archive.</h2></header>
                 <div className="media-grid">
-                    {photos.map((photo, index) => <article key={photo}><img src={photo} alt={`BMSCE Rocketry archive photograph ${index + 1}`} /></article>)}
+                    {photos.map((photo, index) => { const alt = `BMSCE Rocketry archive photograph ${index + 1}`; return <article key={photo}><button type="button" onClick={() => setSelectedPhoto({ src: photo, alt })} aria-label={`View ${alt}`}><img src={photo} alt={alt} /></button></article>; })}
                 </div>
             </section>
+
+            {selectedPhoto && <div className="media-lightbox" role="dialog" aria-modal="true" aria-label="Expanded gallery image" onClick={() => setSelectedPhoto(null)}><button className="media-lightbox-close" type="button" onClick={() => setSelectedPhoto(null)} aria-label="Close image viewer">×</button><img src={selectedPhoto.src} alt={selectedPhoto.alt} onClick={(event) => event.stopPropagation()} /></div>}
 
         </main>
     );

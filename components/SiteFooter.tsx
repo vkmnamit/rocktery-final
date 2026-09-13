@@ -16,7 +16,7 @@ export default function SiteFooter() {
         </div>
         <div className="site-footer-main">
             <div><p className="site-footer-label">Contact us.</p><p>General: <a href="mailto:rocketry@bmsce.ac.in">rocketry@bmsce.ac.in</a></p><p>BMS College of Engineering<br />Bengaluru, Karnataka, India</p></div>
-            <div><p className="site-footer-label">Explore.</p><Link href="/members">Team</Link><Link href="/projects">Projects</Link><Link href="/media">Media archive</Link><Link href="/sponsors">Sponsors</Link></div>
+            <div><p className="site-footer-label">Explore.</p><Link href="/members">Team</Link><Link href="/projects">Projects</Link><Link href="/media">Media archive</Link><Link href="/documentation">Documentation</Link><Link href="/sponsors">Sponsors</Link></div>
             <div className="site-footer-mark" aria-label="BMSCE Rocketry"><Image src="/imgs/rocketry-logo.png" alt="BMSCE Rocketry logo" width={120} height={120} /></div>
         </div>
         <div className="site-footer-bottom"><span>BMSCE Rocketry © 2026</span><span>Engineering Beyond Limits</span></div>

@@ -5,3 +5,8 @@
 .home-reference-hero {
     height: 100vh;
 }
+
+.home-reference-hero h1 { font-family: var(--font-zade) !important; font-size: clamp(4.2rem, min(9vw, 13vh), 10.5rem); line-height: .9; letter-spacing: .045em !important; word-spacing: .12em !important; max-width: 100%; }
+.home-reference-intro h2, .home-reference-impact h2, .home-reference-work h2, .home-reference-missions h2 { font-size: clamp(2.8rem, 5.5vw, 6rem); line-height: .94; }
+@media (max-width: 650px) { .home-reference-hero h1 { font-size: 17vw; } }
+@media (max-width: 650px) { .home-reference-intro h2, .home-reference-impact h2, .home-reference-work h2, .home-reference-missions h2 { font-size: clamp(2.4rem, 10vw, 4rem); line-height: .98; } }

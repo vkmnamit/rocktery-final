@@ -46,6 +46,7 @@ export default function RootLayout({
                 <Navbar />
                 <PageTransition>{children}</PageTransition>
                 <SiteFooter />
+                <div className="page-bottom-blur" aria-hidden="true"><i /><i /><i /><i /><i /></div>
             </body>
         </html>
     );

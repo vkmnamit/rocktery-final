@@ -22,13 +22,11 @@ export default function HomeLayout() {
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
         const ctx = gsap.context(() => {
-            // STES-style giant text parallax: slides left-to-right with scrub,
-            // scrolling away naturally (no sticky / no cover).
             gsap.fromTo(
                 ".home-reference-wordmark .giant-text",
-                { x: -400, opacity: 0.8 },
+                { x: () => -window.innerWidth * .55, opacity: 0.8 },
                 {
-                    x: 400,
+                    x: () => window.innerWidth * .55,
                     opacity: 1,
                     ease: "none",
                     scrollTrigger: {
@@ -69,9 +67,8 @@ export default function HomeLayout() {
         <div className="home-reference-ticker"><div><span>Design ✦ Build ✦ Test ✦ Launch ✦ Learn ✦ Repeat ✦ Design ✦ Build ✦ Test ✦ Launch ✦ Learn ✦ Repeat ✦ </span><span>Design ✦ Build ✦ Test ✦ Launch ✦ Learn ✦ Repeat ✦ Design ✦ Build ✦ Test ✦ Launch ✦ Learn ✦ Repeat ✦ </span><span>Design ✦ Build ✦ Test ✦ Launch ✦ Learn ✦ Repeat ✦ Design ✦ Build ✦ Test ✦ Launch ✦ Learn ✦ Repeat ✦ </span><span>Design ✦ Build ✦ Test ✦ Launch ✦ Learn ✦ Repeat ✦ Design ✦ Build ✦ Test ✦ Launch ✦ Learn ✦ Repeat ✦ </span></div></div>
         <section className="giant-text-section home-reference-wordmark" aria-label="BMSCE Rocketry"><div><h2 className="giant-text">BMSCE ROCKETRY</h2></div></section>
         <AboutUs />
-        <section className="home-reference-intro home-reveal" id="about"><span className="home-reveal-label">01 / Who we are</span><div><h2 className="home-reveal-title"><span className="home-reveal-line">Built by</span><span className="home-reveal-line">students.</span></h2><article className="home-reveal-body"><p>From the first sketch to launch day, we bring together engineering, experimentation and ambition to build vehicles that push us further.</p><small>BMSCE Rocketry is a multidisciplinary student team driven by curiosity and hands-on learning. Our members work across propulsion, avionics, structures, recovery, operations and mission strategy.</small></article></div></section>
+        <section className="home-reference-intro home-reveal" id="about"><span className="home-reveal-label">01 / Who we are</span><div><h2 className="home-reveal-title druk-display"><span className="home-reveal-line">Built by</span><span className="home-reveal-line">students.</span></h2><article className="home-reveal-body"><p>From the first sketch to launch day, we bring together engineering, experimentation and ambition to build vehicles that push us further.</p><small>BMSCE Rocketry is a multidisciplinary student team driven by curiosity and hands-on learning. Our members work across propulsion, avionics, structures, recovery, operations and mission strategy.</small></article></div></section>
         <section className="home-reference-missions home-reveal"><header><h2 className="home-reveal-title"><span className="home-reveal-line">See the</span><span className="home-reveal-line">impact.</span></h2><p className="home-reveal-body">Our missions turn ambitious ideas into real engineering.</p></header><div>{cards.map(([name, label, image]) => <article key={name} className="home-reveal-body"><span>{label}</span><img src={image} alt={`${name} mission patch`} /><b>{name}</b></article>)}</div></section>
         <section className="home-reference-impact home-reveal"><header><h2 className="home-reveal-title"><span className="home-reveal-line">By the</span><span className="home-reveal-line">numbers.</span></h2><p className="home-reveal-body">A growing team, a growing archive and a shared commitment to turning ideas into real engineering.</p></header><div>{[["05+", "Years of innovation"], ["40+", "Team members"], ["06", "Technical domains"], ["∞", "Ideas to test"]].map(([number, label]) => <article key={label} className="home-reveal-body"><b>{number}</b><span>{label}</span></article>)}</div></section>
-        <section className="home-reference-cta home-reveal"><span className="home-reveal-label">04 / Follow the journey</span><h2 className="home-reveal-title"><span className="home-reveal-line">See the</span><span className="home-reveal-line">mission.</span></h2><div><p className="home-reveal-body">Launches, testing, workshops and the people behind every mission — explore our visual archive.</p><Link href="/media">Explore media ↗</Link></div></section>
     </main>;
 }
