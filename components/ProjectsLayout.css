@@ -20,7 +20,9 @@ html {
 body {
   font-family: Inter, Arial, sans-serif;
   background: var(--black);
-  overflow-x: hidden
+  /* clip rather than hidden: hidden makes <body> a scroll container,
+     which silently disables position: sticky page-wide. */
+  overflow-x: clip
 }
 
 /* ---------- FIXED HEADER ---------- */

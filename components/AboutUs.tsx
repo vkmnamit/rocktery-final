@@ -92,7 +92,7 @@ const AboutUs = () => {
     return (
         <section ref={sectionRef} className="about-us-section home-reveal">
             <div className="about-content">
-                <div className="about-intro">
+                <div className="about-intro sticky-head">
                     <div className="about-index home-reveal-label">01 / Who We Are · BMSCE Rocketry</div>
                     <h2 ref={titleRef} className="about-title home-reveal-title">
                         <span className="about-title-line about-title-line-1 home-reveal-line">ABOUT</span>
@@ -104,7 +104,7 @@ const AboutUs = () => {
                     </p>
                 </div>
 
-                <div className="about-list">
+                <div className="about-list sticky-fold">
                     {aboutItems.map((item, index) => (
                         <div key={index} className="about-item home-reveal-body">
                             <h3 className="about-item-title">{item.title}</h3>

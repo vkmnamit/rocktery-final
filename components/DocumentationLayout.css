@@ -46,3 +46,22 @@
 
 /* Keep the long documentation title fully inside the visual hero. */
 .docs-hero h1{font-size:clamp(3.3rem,5.5vw,6.8rem);line-height:.92;letter-spacing:.03em}
+
+/* Sticky fold: the archive heading pins while the toolbar and rows slide over
+   it. Each folding block is opaque so it wipes the pinned heading away cleanly. */
+.docs-archive-heading.sticky-head,
+.docs-toolbar.sticky-fold,
+.docs-list.sticky-fold {
+    background: var(--docs-cream);
+}
+
+/* The "browse by discipline" grid slides over its own pinned index label. */
+.docs-disciplines>span.sticky-head {
+    display: block;
+    background: #fff;
+    margin-bottom: 0;
+}
+
+.docs-disciplines>div.sticky-fold {
+    background: #fff;
+}

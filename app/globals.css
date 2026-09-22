@@ -482,7 +482,9 @@ a {
     padding: 40px 5vw;
     background: #e8dcc5;
     color: #111;
-    overflow: hidden;
+    /* `clip` still hides the overflow but keeps the block a non-scroll
+       container, which is what lets .about-intro stay position: sticky. */
+    overflow: clip;
     perspective: 1200px;
     border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -621,6 +623,15 @@ a {
     padding-top: 45px;
 }
 
+/* Sticky fold: the ABOUT US intro pins, then the briefs slide up over it. */
+.about-intro.sticky-head {
+    background: #e8dcc5;
+}
+
+.about-list.sticky-fold {
+    background: #e8dcc5;
+}
+
 .about-item {
     visibility: hidden;
     opacity: 0;
@@ -674,6 +685,54 @@ a {
         grid-template-columns: 1fr;
         gap: 28px;
     }
+}
+
+/* ============ STICKY SECTION FOLD ============
+   The "sticky scroll" beat used on the projects and sponsors pages: a section's
+   heading block pins just below the fixed navbar, and the section's own content
+   then slides up and folds over it (the arriving block is opaque, so the pinned
+   heading is wiped away rather than messy-overlapped).
+
+   Pairing, always:
+     <X class="sticky-head">…</X>          ← pins
+     <Y class="sticky-fold">…</Y>          ← slides over it (needs an opaque
+                                             background matching the section)
+
+   `align-self: start` matters when the heading is a grid/flex item — a
+   stretched item has no room to travel and the pin silently does nothing.
+   The class only positions things; the opaque fold background is set per page
+   next to the section it belongs to. */
+.sticky-head {
+    position: -webkit-sticky;
+    position: sticky;
+    top: var(--sticky-top, 104px);
+    align-self: start;
+    z-index: 1;
+}
+
+.sticky-fold {
+    position: relative;
+    z-index: 2;
+}
+
+@media (max-width: 900px) {
+    .sticky-head { top: var(--sticky-top, 92px); }
+}
+
+/* Phones: the pinned blocks (team + documentation headers carry a heading *and*
+   a paragraph) would eat too much of a small viewport, so the sections simply
+   scroll normally there. */
+@media (max-width: 720px) {
+    .sticky-head { position: static; }
+}
+
+/* Sticky items must live in a scrollport that actually scrolls: `overflow:
+   hidden` (unlike `clip`) turns an ancestor into a scroll container and kills
+   position: sticky, so each page root uses `overflow-x: clip` instead (set in
+   TeamLayout.css / SponsorsLayout.css / MediaLayout.css). */
+
+@media (prefers-reduced-motion: reduce) {
+    .sticky-head { position: static; }
 }
 
 /* Progressive Zade-style lens blur at the lower viewport edge. */

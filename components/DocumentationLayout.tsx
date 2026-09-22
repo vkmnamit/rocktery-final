@@ -35,12 +35,12 @@ export default function DocumentationLayout() {
         </section>
 
         <section className="docs-archive" id="documents">
-            <header className="docs-archive-heading"><h2>Technical<br />Archive.</h2><p>Search the archive or filter it by subsystem.</p></header>
-            <div className="docs-toolbar">
+            <header className="docs-archive-heading sticky-head"><h2>Technical<br />Archive.</h2><p>Search the archive or filter it by subsystem.</p></header>
+            <div className="docs-toolbar sticky-fold">
                 <label className="docs-search"><span>Search</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="SEARCH DOCUMENTATION..." /></label>
                 <div className="docs-filters" aria-label="Filter documentation">{filters.map((item) => <button key={item} className={filter === item ? "active" : ""} onClick={() => setFilter(item)}>{item}</button>)}</div>
             </div>
-            <div className="docs-list">
+            <div className="docs-list sticky-fold">
                 {visibleDocuments.map((document) => <article className="docs-row" key={document.title} tabIndex={0} onMouseEnter={() => setPreview(document)} onMouseLeave={() => setPreview(null)} onFocus={() => setPreview(document)} onBlur={() => setPreview(null)}>
                     <span className="docs-number">{String(documents.indexOf(document) + 1).padStart(2, "0")}</span>
                     <h3>{document.title}</h3><p>{document.meta}</p><span className="docs-type">PDF / {document.type}</span><span className="docs-arrow">↗</span>
@@ -50,7 +50,7 @@ export default function DocumentationLayout() {
             {preview && <aside className="docs-preview" aria-live="polite"><img src={preview.image} alt="" /><div><span>{preview.category} / {preview.type}</span><h3>{preview.title}</h3><p>{preview.description}</p></div></aside>}
         </section>
 
-        <section className="docs-disciplines"><span className="docs-eyebrow">03 / Browse by discipline</span><div>
+        <section className="docs-disciplines"><span className="docs-eyebrow sticky-head">03 / Browse by discipline</span><div className="sticky-fold">
             {filters.slice(2).map((item, index) => <button key={item} onClick={() => { setFilter(item); document.getElementById("documents")?.scrollIntoView({ behavior: "smooth" }); }}><span>0{index + 1}</span><strong>{item}.</strong><p>{({ propulsion: "Motor systems, testing, impulse and performance records.", avionics: "Telemetry, electronics, sensing and flight software.", recovery: "Deployment systems, parachutes and flight safety.", structures: "Airframes, materials, CAD and manufacturing." } as Record<string, string>)[item]}</p></button>)}
         </div></section>
     </main>;

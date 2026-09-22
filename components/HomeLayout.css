@@ -5,3 +5,10 @@
 /* Zade display faces need looser tracking and line-height at this scale. */
 .home-reference h1,.home-reference h2{letter-spacing:-.045em!important;line-height:.91!important}
 .home-reference h2.druk-display{letter-spacing:-.055em!important;line-height:.96!important}
+
+/* Sticky fold: the section heading pins under the navbar and the cards below
+   slide up over it (opaque #111, matching the section background). */
+.home-reference-missions>header.sticky-head,
+.home-reference-impact>header.sticky-head,
+.home-reference-missions>div.sticky-fold,
+.home-reference-impact>div.sticky-fold{background:#111}

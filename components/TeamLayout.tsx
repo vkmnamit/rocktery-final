@@ -2,67 +2,144 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, MouseEvent } from "react";
+import { ADVISORS, ADVISORY_COMMITTEE, initials, ORG, RAW, TEAMS, toMember } from "./teamData";
+import type { OrgNodeData } from "./teamData";
 import "./TeamLayout.css";
 
-// [name, role, description, linkedin, photo, email]
-const members = [
-    ["Shreyas Vinod Kulkarni", "Chief Systems Engineer, Mission Operations", "", "https://www.linkedin.com/in/shreyas-kulkarni-8b4391222/", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789159297/12_mu3thw.jpg", "shreyasvinod.se24@bmsce.ac.in"],
-    ["Mohammed Zubair", "Head of Logistics", "Plans and coordinates procurement, inventory, workshop operations and launch logistics so each subsystem has the right resources at the right time.", "https://www.linkedin.com/in/mohammed-zubair-783412337", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789159292/23_wrvzhh.jpg", "mohammed.zubair.f@gmail.com"],
-    ["Arush Dwivedi", "FCS Lead", "Leads the design and testing of rocket avionics while training the flight-control systems team.", "https://www.linkedin.com/in/arushdwivedi11", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789159284/19_yklbfg.jpg", "arushdwivedi.ec23@bmsce.ac.in"],
-    ["Jatin Nagvekar", "Finance Head", "Handles procurement and detailed segregation of college funding.", "https://www.linkedin.com/in/jatin-nagvekar-136371291", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789161758/IMG-20260326-WA0016_-_Jatin_Nagvekar_bx1gzx.jpg", "jatinnagvekar@gmail.com"],
-    ["Pranav Vasanth Kumar Rao", "Chief Propulsion Engineer", "Leads the engineering, testing and optimization of the team’s solid and advanced rocket propulsion systems.", "https://www.linkedin.com/in/pranav-vasanth-kumar-rao-27b561329/", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789159290/14_e4uq62.png", "pranavvasanth.me23@bmsce.ac.in"],
-    ["Jatin Oswal", "Mission Captain", "Works across airframe, structures, recovery, flight control systems, integration and administration.", "https://www.linkedin.com/in/jatin-oswal-79b417303", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789159290/13_xaatcn.jpg", "jatinnitin.se23@bmsce.ac.in"],
-    ["Sanjana Atreya GS", "Corporate Lead", "Leads sponsorship and public-relations work, focusing on partner acquisition and long-term relationships.", "https://www.linkedin.com/in/sanjana-atreya-41b601252", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789161917/Screenshot_20260613_162652_Gallery_-_Sanjana_Atreya_G_S_meu9lx.jpg", "sanjanaatreya.me24@bmsce.ac.in"],
-    ["Chiranthan S", "Chief Flight Control Systems Engineer", "Oversees the design, testing and integration of avionics, microcontroller systems and telemetry components.", "https://www.linkedin.com/in/chiranthan-s", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789159287/20_l7lvoa.jpg", "chiranthan46124@gmail.com"],
-    ["Samruddhee H P", "Recovery Team Lead", "Leads the development of reliable recovery systems, including parachutes and deployment mechanisms.", "https://www.linkedin.com/in/samruddhee-h-p-018263330", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789159289/17_w1oaxx.jpg", "samruddheehp.se24@bmsce.ac.in"],
-    ["Sujith J Poojary", "Aero-Structures Lead", "Leads aerodynamic design, structural analysis and manufacturing from concept to a flight-ready airframe.", "https://www.linkedin.com/in/sujith-j-poojary-6684b7200", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789159288/21_c5rrv2.png", "sujithj.se23@bmsce.ac.in"],
-    ["Praneeth Mahantesh M", "Propulsion Lead", "Coordinates propulsion design, analysis, testing, reviews and integration across the mission lifecycle.", "https://www.linkedin.com/in/praneeth-mahantesh-m-b41260328", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789159290/15_o844zc.jpg", "praneethmahantesh.se24@bmsce.ac.in"],
-    ["Ananya Ulhas", "Associate Engineer · Recovery", "Contributes to reliable recovery mechanisms while supporting subsystem operations and mentoring junior engineers.", "https://www.linkedin.com/in/ananya-ulhas-a6754b33a", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789159286/18_ucbxz5.jpg", "ananyaulhas.se24@bmsce.ac.in"],
-    ["Prerana Joshi", "Propulsion Lead", "Designs, analyses, tests and integrates propulsion systems, from grain geometry through static-fire validation.", "https://www.linkedin.com/in/prerana-joshi-436694215", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789159284/16_r8xsrn.jpg", "preranajoshi.se24@bmsce.ac.in"],
-    ["Sushmitha K S", "Ground Station Officer", "", "https://www.linkedin.com/in/sushmitha-k-s", "https://res.cloudinary.com/dgrrdy6sk/image/upload/v1789162137/Sushmitha_-_Sushmitha_K_S_mounst.jpg", "ks.sushmitha.24.10@gmail.com"],
-] as const;
+/* ══════════════════════════════════════════════════════════════════════════
+   Page component — all member info lives in ./teamData
+══════════════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════════════
+   Org-chart node (recursive)
+══════════════════════════════════════════════════════════════════════════ */
 
-type Member = {
-    name: string;
-    role: string;
-    description: string;
-    linkedin: string;
-    photo: string;
-    email: string;
-};
+function OrgChartNode({ node, openTeam, setOpenTeam, onHoverTeam }: { node: OrgNodeData, openTeam: string | null, setOpenTeam: (id: string | null) => void, onHoverTeam: (id: string | null) => void }) {
+    const hasChildren = !!node.children?.length;
+    const isInteractive = !!node.teamId;
+    const isOpen = isInteractive && openTeam === node.teamId;
+    
+    // Find the team members if this node corresponds to a team
+    const teamData = isInteractive ? TEAMS.find(t => t.id === node.teamId) : null;
+    /* All teams' member cards sit below their box even with the mouse away;
+       hovering (or click-pinning) a box pops that team's cards up as active. */
+    const hasMembers = !!teamData && teamData.members.length > 0;
 
-const toMember = (row: readonly [string, string, string, string, string, string]): Member => ({
-    name: row[0],
-    role: row[1],
-    description: row[2],
-    linkedin: row[3],
-    photo: row[4],
-    email: row[5],
-});
+    return (
+        <div
+            className="on"
+            /* Hovering anywhere outside this node's own subtree (box + popped-up
+               member cards) removes the hover popup, unless it was pinned by a click. */
+            onMouseLeave={isInteractive ? () => onHoverTeam(null) : undefined}
+        >
+            {isInteractive ? (
+                <button
+                    className={[
+                        "on-box",
+                        node.highlight ? "on-box--hl" : "",
+                        node.vacant ? "on-box--vacant" : "",
+                        isOpen ? "on-box--active" : ""
+                    ].filter(Boolean).join(" ")}
+                    /* Hover OR click both pop the member cards up. Click pins
+                       them open (stays after the mouse leaves); hover alone
+                       clears as soon as the mouse moves away. */
+                    onMouseEnter={() => onHoverTeam(node.teamId!)}
+                    onClick={() => setOpenTeam(isOpen ? null : node.teamId!)}
+                    style={{
+                        cursor: "pointer",
+                        border: isOpen ? "1px solid var(--cream)" : undefined,
+                        background: isOpen ? "var(--cream)" : undefined,
+                        color: isOpen ? "var(--ink)" : undefined,
+                        transition: "all 0.3s ease"
+                    }}
+                >
+                    <span className="on-title" style={{ color: isOpen ? "rgba(17,17,17,.6)" : undefined }}>{node.title}</span>
+                    {node.name && <span className="on-name" style={{ color: isOpen ? "var(--ink)" : undefined }}>{node.name}</span>}
+                </button>
+            ) : (
+                <div className={[
+                    "on-box",
+                    node.highlight ? "on-box--hl" : "",
+                    node.vacant ? "on-box--vacant" : "",
+                ].filter(Boolean).join(" ")}>
+                    <span className="on-title">{node.title}</span>
+                    {node.name && <span className="on-name">{node.name}</span>}
+                </div>
+            )}
 
-const initials = (name: string) => name.split(" ").map((part) => part[0]).slice(0, 2).join("");
+            {/* All teams' members stay below their box even with the mouse away;
+                the hovered (or click-pinned) box's cards pop up as active. */}
+            {hasMembers && (
+                <div className="tree-members">
+                    <div className="on-vline" />
+                    <div className="on-children" style={{ gap: "20px" }}>
+                        {teamData!.members.map((member) => (
+                            <div key={member.name} className="on-child-slot">
+                                <article className={`member-card${isOpen ? " member-card--active" : ""}`}>
+                                    <div className="member-card-photo">
+                                        {member.photo ? (
+                                            <img src={member.photo} alt={member.name} />
+                                        ) : (
+                                            <div className="member-card-initials"><b>{initials(member.name)}</b></div>
+                                        )}
+                                    </div>
+                                    <h4 className="member-card-name">{member.name}</h4>
+                                    <p className="member-card-role">{member.role}</p>
+                                    <div className="member-card-contact">
+                                        <a className="member-card-mail" href={`mailto:${member.email}`} aria-label={`Email ${member.name}`}>
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                        </a>
+                                        <a className="member-card-linkedin" href={member.linkedin} target="_blank" rel="noreferrer" aria-label={`${member.name} on LinkedIn`}>in</a>
+                                    </div>
+                                </article>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Render traditional children below members (or instead of members if not open) */}
+            {hasChildren && (
+                <>
+                    <div className="on-vline" />
+                    <div className="on-children">
+                        {node.children!.map(child => (
+                            <div key={child.id} className="on-child-slot">
+                                <OrgChartNode node={child} openTeam={openTeam} setOpenTeam={setOpenTeam} onHoverTeam={onHoverTeam} />
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
+        </div>
+    );
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Main component
+══════════════════════════════════════════════════════════════════════════ */
 
 export default function TeamLayout() {
+    /* Click pins a team's member cards open (survives the mouse leaving);
+       hover pops them up temporarily and wins while the cursor is on a box. */
+    const [pinnedTeam, setPinnedTeam] = useState<string | null>(null);
+    const [hoverTeam,  setHoverTeam]  = useState<string | null>(null);
+    const openTeam = hoverTeam ?? pinnedTeam;
+    /* Directory (below the tree): one member per row; hovering or clicking a
+       row reveals their profile card, like the original team page. */
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    const [profileTop, setProfileTop] = useState(74);
+    const [profileTop,  setProfileTop]  = useState(74);
     const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const active = activeIndex === null ? null : toMember(members[activeIndex]);
-    // Preload all portraits once so the popup image appears instantly on hover.
+    const active = activeIndex === null ? null : toMember(RAW[activeIndex]);
+
+    /* Preload all portraits */
     useEffect(() => {
-        members.forEach((row) => {
-            const src = row[4];
-            if (src) {
-                const img = new Image();
-                img.src = src;
-            }
-        });
+        RAW.forEach(row => { const img = new Image(); img.src = row[4]; });
     }, []);
+
     const clearHoverTimer = () => {
-        if (hoverTimer.current) {
-            clearTimeout(hoverTimer.current);
-            hoverTimer.current = null;
-        }
+        if (hoverTimer.current) { clearTimeout(hoverTimer.current); hoverTimer.current = null; }
     };
+
     const selectMember = (index: number, target: HTMLElement) => {
         // Small delay ignores accidental fly-by hovers and stops flicker between rows.
         clearHoverTimer();
@@ -75,28 +152,85 @@ export default function TeamLayout() {
             setProfileTop(Math.min(rawTop, maxTop));
         }, 70);
     };
-    const cancelHover = () => {
-        clearHoverTimer();
-        setActiveIndex(null);
-    };
+
+    const cancelHover = () => { clearHoverTimer(); setActiveIndex(null); };
+
+    /* Click: pin (or unpin) a team's member cards. Clears the hover state so the
+       pinned selection is what stays visible after the mouse moves away. */
+    const setOpenTeam = (id: string | null) => { setPinnedTeam(id); setHoverTeam(null); };
+
+    /* Hover: temporarily pop the member cards up; removed when the mouse leaves. */
+    const onHoverTeam = (id: string | null) => setHoverTeam(id);
 
     return (
         <main className="team-page" onMouseLeave={cancelHover}>
+
+            {/* ── 01 Hero ─────────────────────────────────────────── */}
             <section className="team-hero">
-                <span>01 / People behind the mission</span>
+                <span className="sticky-head">01 / People behind the mission</span>
                 <div>
-                    <h1>
-                        Meet
-                        <br />
-                        the
-                        <br />
-                        Team.
-                    </h1>
+                    <h1>Meet<br />the<br />Team.</h1>
                     <p>A multidisciplinary team of engineers, designers and builders taking ambitious ideas from concept to flight.</p>
                 </div>
             </section>
+
+            {/* ── 02 Org Chart ────────────────────────────────────── */}
+            <section className="org-section" id="org">
+                <div className="org-section-header sticky-head">
+                    <span>02 / Organization</span>
+                    <div>
+                        <h2>Org<br />Structure.</h2>
+                        <p>A mission-critical hierarchy of sub-teams unified under a single leadership layer.</p>
+                    </div>
+                </div>
+
+                <div className="org-chart-wrap sticky-fold">
+                    <div className="org-chart-inner">
+
+                        {/* Main tree */}
+                        {/* Main tree: Advisory Committee at the top, then the rest below */}
+                        <div className="org-tree-center">
+                            {/* Advisory Committee — at the very top of the org chart, above Mission Captain.
+                                Renders the same way as the rest of the tree: a parent box with its children
+                                connected by org-chart lines. The three advisor types are drawn with their
+                                individual advisor names below them (built from ADVISORY_COMMITTEE). */}
+                            <OrgChartNode node={ADVISORY_COMMITTEE} openTeam={openTeam} setOpenTeam={setOpenTeam} onHoverTeam={onHoverTeam} />
+                            {/* Horizontal connector from advisors down to the rest of the tree */}
+                            <div className="on-vh-connector" aria-hidden="true" />
+                            <OrgChartNode node={ORG} openTeam={openTeam} setOpenTeam={setOpenTeam} onHoverTeam={onHoverTeam} />
+                        </div>
+
+                        {/* Side panels */}
+                        <div className="org-side-panels">
+                            <div className="org-side-panel">
+                                <div className="org-side-label">Pipeline</div>
+                                <div className="org-pipeline">
+                                    <div className="on-box"><span className="on-title">Associate Engineer / Officer</span></div>
+                                    <div className="on-vline" />
+                                    <div className="on-box"><span className="on-title">Junior Engineer / Officer</span></div>
+                                    <div className="on-vline" />
+                                    <div className="on-box"><span className="on-title">Trainee</span></div>
+                                </div>
+                            </div>
+                            <div className="org-side-panel">
+                                <div className="org-side-label">Hierarchy</div>
+                                <div className="org-pipeline">
+                                    <div className="on-box"><span className="on-title">Advisory Committee</span></div>
+                                    <div className="on-vline" />
+                                    <div className="on-box"><span className="on-title">Executive Committee</span></div>
+                                    <div className="on-vline" />
+                                    <div className="on-box"><span className="on-title">Subsystem Leads</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            {/* ── 03 Directory — one member per row, hover/click reveals profile ── */}
             <section className="team-directory-section" id="team">
-                <div className="team-heading">
+                <div className="team-heading sticky-head">
                     <h2>
                         Our
                         <br />
@@ -104,8 +238,9 @@ export default function TeamLayout() {
                     </h2>
                     <p>Move over a member to reveal their profile. Each image slot is ready for an individual portrait.</p>
                 </div>
+
                 <div
-                    className={`directory${active ? " has-hover" : ""}`}
+                    className={`directory sticky-fold${active ? " has-hover" : ""}`}
                     onMouseLeave={() => setActiveIndex(null)}
                     onMouseMove={(event) => {
                         const target = event.target as HTMLElement;
@@ -116,7 +251,8 @@ export default function TeamLayout() {
                         <span>Team member</span>
                         <span>Role / responsibility</span>
                     </div>
-                    {members.map((row, index) => {
+
+                    {RAW.map((row, index) => {
                         const member = toMember(row);
                         return (
                             <button
@@ -150,6 +286,7 @@ export default function TeamLayout() {
                             </button>
                         );
                     })}
+
                     {active && (
                         <aside className="profile-panel" style={{ "--profile-top": `${profileTop}px` } as CSSProperties}>
                             <button className="profile-close" onClick={() => setActiveIndex(null)} aria-label="Close member profile">×</button>
@@ -186,20 +323,19 @@ export default function TeamLayout() {
                         </aside>
                     )}
                 </div>
+
                 <div className="team-note">
                     <p>Every successful launch is the sum of many disciplines moving in the same direction.</p>
                     <span>Rocketry BMSCE · Team Directory</span>
                 </div>
             </section>
+
+            {/* ── CTA ─────────────────────────────────────────────── */}
             <section className="team-cta">
-                <h2>
-                    Build
-                    <br />
-                    With Us.
-                </h2>
+                <h2>Build<br />With Us.</h2>
                 <div>
                     <p>Want to help build the next flight system?</p>
-                    <a href="mailto:rocketry@bmsce.ac.in">Get in touch →</a>
+                    <a href="mailto:rocketry@bmsce.ac.in">Get in touch &rarr;</a>
                 </div>
             </section>
         </main>

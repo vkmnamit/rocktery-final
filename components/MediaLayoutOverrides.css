@@ -28,9 +28,6 @@
 }
 
 .media-card button { height: 100%; position: relative; }
-.media-card button > div { position: absolute; inset: auto 0 0; }
-.media-card:hover button > div,
-.media-card:focus-within button > div { transform: none; }
 .media-card:focus-within img,
 .media-grid article:focus-within img { filter: none; transform: scale(1.04); }
 .media-track:focus-within { animation-play-state: paused; }

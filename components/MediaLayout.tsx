@@ -50,13 +50,13 @@ export default function MediaLayout() {
             <section className="media-motion">
                 <p className="media-kicker">02 / Moments in motion — hover to pause</p>
                 <div className="media-track">
-                    {[...loopPhotos, ...loopPhotos].map((photo, index) => { const alt = `Rocketry event moment ${index % loopPhotos.length + 1}`; return <article className={`media-card${index % 3 === 0 ? " media-card-wide" : ""}`} key={`${photo}-${index}`}><button type="button" onClick={() => setSelectedPhoto({ src: photo, alt })} aria-label={`View ${alt}`}><img src={photo} alt={alt} /><div><b>{["Launch day", "The makers", "Mission control", "Engineering", "In the field", "Together"][index % loopPhotos.length]}</b><span>Visual archive / 2026</span></div></button></article>; })}
+                    {[...loopPhotos, ...loopPhotos].map((photo, index) => { const alt = `Rocketry event moment ${index % loopPhotos.length + 1}`; return <article className={`media-card${index % 3 === 0 ? " media-card-wide" : ""}`} key={`${photo}-${index}`}><button type="button" onClick={() => setSelectedPhoto({ src: photo, alt })} aria-label={`View ${alt}`}><img src={photo} alt={alt} /></button></article>; })}
                 </div>
             </section>
 
             <section className="media-archive">
-                <header><h2>Archive.</h2></header>
-                <div className="media-grid">
+                <header className="sticky-head"><h2>Archive.</h2></header>
+                <div className="media-grid sticky-fold">
                     {photos.map((photo, index) => { const alt = `BMSCE Rocketry archive photograph ${index + 1}`; return <article key={photo}><button type="button" onClick={() => setSelectedPhoto({ src: photo, alt })} aria-label={`View ${alt}`}><img src={photo} alt={alt} /></button></article>; })}
                 </div>
             </section>

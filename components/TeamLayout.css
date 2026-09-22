@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@500;600;700;800;900&display=swap');
-.team-page{--ink:#111;--cream:#f1eee6;--line:rgba(17,17,17,.18);font-family:Inter,Arial,sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden}.team-nav{height:76px;padding:0 5vw;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.team-brand{font-size:var(--fs-15);font-weight:900;letter-spacing:-.05em}.team-nav a{text-decoration:none;color:inherit}.team-nav>div{display:flex;gap:28px;font:var(--fs-10) 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase}.team-hero{min-height:72vh;padding:7vw 5vw 5vw;border-bottom:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between}.team-hero>span,.directory-labels,.member-name i,.member-role,.profile-info p,.profile-description span,.team-note span,.team-cta a{font:var(--fs-10) 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase}.team-hero>span{color:#77736d}.team-hero>div{display:grid;grid-template-columns:1.2fr .8fr;gap:8vw;align-items:end}.team-hero h1,.team-heading h2,.team-cta h2{font-size:clamp(5rem,13vw,15rem);line-height:.7;letter-spacing:-.115em;text-transform:uppercase}.team-hero p{max-width:380px;font-size:var(--fs-14);line-height:1.75;color:#494640}.team-directory-section{padding:8vw 5vw 10vw}.team-heading{display:flex;justify-content:space-between;align-items:end;padding-bottom:4vw;border-bottom:1px solid var(--line)}.team-heading h2{font-size:clamp(3.5rem,8vw,10rem)}.team-heading p{max-width:280px;font-size:var(--fs-12);line-height:1.65;color:#77736d}.directory{position:relative}.directory-labels{display:grid;grid-template-columns:1.25fr .9fr;padding:18px 0 13px;color:#77736d}.member-row{width:100%;display:grid;grid-template-columns:1.25fr .9fr 42px;align-items:center;min-height:108px;border:0;border-top:1px solid var(--line);background:transparent;color:inherit;cursor:pointer;position:relative;padding:0 18px;margin:0 -18px;text-align:left;transition:background .28s,color .28s,border-color .28s}.member-row:last-of-type{border-bottom:1px solid var(--line)}.member-row:hover,.member-row.active{background:var(--ink);color:#fff;border-color:var(--ink)}.member-name{display:flex;align-items:center;font-size:clamp(1.8rem,4vw,4.8rem);line-height:.85;letter-spacing:-.07em;font-weight:800}.member-name i{font-style:normal;color:#77736d;margin-right:18px}.member-role{line-height:1.5;color:#55514b}.member-row:hover .member-name i,.member-row.active .member-name i,.member-row:hover .member-role,.member-row.active .member-role{color:rgba(255,255,255,.62)}.member-plus{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;font-size:var(--fs-18)}.member-row:hover .member-plus,.member-row.active .member-plus{background:#fff;color:#111;border-color:#fff}.profile-panel{position:absolute;z-index:5;width:min(390px,37vw);right:4%;top:74px;animation:profileIn .35s cubic-bezier(.16,1,.3,1)}@keyframes profileIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}.profile-photo{height:500px;position:relative;overflow:hidden;background:#ddd8ce;border:1px solid var(--line)}.portrait-placeholder{height:100%;display:grid;place-items:center;background:linear-gradient(145deg,#262626,#080808);color:var(--cream);position:relative}.portrait-placeholder:before,.portrait-placeholder:after{content:'';position:absolute;border:1px solid rgba(241,238,230,.18);border-radius:50%;aspect-ratio:1}.portrait-placeholder:before{width:70%}.portrait-placeholder:after{width:38%}.portrait-placeholder b{z-index:1;font-size:clamp(4rem,8vw,8rem);letter-spacing:-.1em}.portrait-placeholder span{position:absolute;left:20px;bottom:20px;font:var(--fs-9) 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase;opacity:.55}.profile-link{position:absolute;top:18px;right:18px;width:52px;height:52px;border-radius:50%;background:#fff;color:#111;text-decoration:none;display:grid;place-items:center;font-weight:900;font-size:var(--fs-18);opacity:0;transform:translateY(-8px);transition:.25s}.profile-photo:hover .profile-link{opacity:1;transform:none}.profile-description{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:20px 22px 22px;transform:translateY(101%);transition:transform .48s cubic-bezier(.16,1,.3,1)}.profile-photo:hover .profile-description{transform:none}.profile-description span{color:#77736d}.profile-description p{margin-top:10px;font-size:var(--fs-12);line-height:1.65;color:#44413c}.profile-info{padding:19px 20px 22px;background:#fff;border:1px solid var(--line);border-top:0}.profile-info h3{font-size:var(--fs-25);letter-spacing:-.05em}.profile-info p{color:#77736d;margin-top:7px}.team-note{margin-top:8vw;padding-top:22px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:8vw}.team-note p{font-size:clamp(1.4rem,2.6vw,2.5rem);line-height:1.15;letter-spacing:-.05em}.team-note span{color:#77736d}.team-cta{background:#111;color:var(--cream);padding:8vw 5vw;min-height:62vh;display:flex;flex-direction:column;justify-content:space-between}.team-cta h2{font-size:clamp(4rem,11vw,13rem)}.team-cta>div{display:flex;justify-content:space-between;align-items:end;gap:30px}.team-cta p{max-width:350px;color:#aaa69f;font-size:var(--fs-13);line-height:1.7}.team-cta a{background:var(--cream);color:#111;padding:17px 24px;text-decoration:none}@media(max-width:800px){.team-hero>div{grid-template-columns:1fr}.team-hero p{margin-top:35px}.profile-panel{position:fixed;left:0;right:0;bottom:0;top:auto;width:100%;margin:0;z-index:60;max-height:88vh;overflow-y:auto;background:var(--cream);border-top:1px solid var(--line);border-radius:22px 22px 0 0;padding:14px 5vw calc(20px + env(safe-area-inset-bottom));box-shadow:0 -18px 60px rgba(0,0,0,.35);animation:profileSheetIn .32s cubic-bezier(.16,1,.3,1)}@keyframes profileSheetIn{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}.profile-close{display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#111;padding:10px 18px;font:var(--fs-10) 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}.profile-close span{font-size:var(--fs-14);line-height:1}.profile-photo{height:min(96vw,380px)}.profile-panel .profile-mail{opacity:1;transform:none}.profile-panel .profile-description{position:static;transform:none;border:1px solid var(--line);border-top:0}.profile-photo{height:min(115vw,560px)}.member-row{grid-template-columns:1.2fr .9fr 38px;min-height:88px}.member-name{font-size:var(--fs-27)}}@media(max-width:560px){.team-nav{padding:0 6vw}.team-nav>div{display:none}.team-hero{padding:10vw 6vw}.team-directory-section{padding:14vw 6vw}.team-heading{display:block}.team-heading p{margin-top:25px}.directory-labels{display:none}.member-row{grid-template-columns:1fr 34px;padding:17px 12px;margin:0 -12px;gap:15px}.member-name{font-size:1.65rem}.member-name i{display:none}.member-role{grid-column:1;grid-row:2}.member-plus{grid-column:2;grid-row:1/3}.profile-panel{margin-top:15px}.profile-photo{height:125vw;max-height:540px}.team-note{grid-template-columns:1fr;gap:22px}.team-cta>div{flex-direction:column;align-items:start}}
+.team-page{--ink:#111;--cream:#f1eee6;--line:rgba(17,17,17,.18);font-family:Inter,Arial,sans-serif;background:var(--cream);color:var(--ink);overflow-x:clip}.team-nav{height:76px;padding:0 5vw;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.team-brand{font-size:var(--fs-15);font-weight:900;letter-spacing:-.05em}.team-nav a{text-decoration:none;color:inherit}.team-nav>div{display:flex;gap:28px;font:var(--fs-10) 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase}.team-hero{min-height:72vh;padding:7vw 5vw 5vw;border-bottom:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between}.team-hero>span,.directory-labels,.member-name i,.member-role,.profile-info p,.profile-description span,.team-note span,.team-cta a{font:var(--fs-10) 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase}.team-hero>span{color:#77736d}.team-hero>div{display:grid;grid-template-columns:1.2fr .8fr;gap:8vw;align-items:end}.team-hero h1,.team-heading h2,.team-cta h2{font-size:clamp(5rem,13vw,15rem);line-height:.7;letter-spacing:-.115em;text-transform:uppercase}.team-hero p{max-width:380px;font-size:var(--fs-14);line-height:1.75;color:#494640}.team-directory-section{padding:8vw 5vw 10vw}.team-heading{display:flex;justify-content:space-between;align-items:end;padding-bottom:4vw;border-bottom:1px solid var(--line)}.team-heading h2{font-size:clamp(3.5rem,8vw,10rem)}.team-heading p{max-width:280px;font-size:var(--fs-12);line-height:1.65;color:#77736d}.directory{position:relative}.directory-labels{display:grid;grid-template-columns:1.25fr .9fr;padding:18px 0 13px;color:#77736d}.member-row{width:100%;display:grid;grid-template-columns:1.25fr .9fr 42px;align-items:center;min-height:108px;border:0;border-top:1px solid var(--line);background:transparent;color:inherit;cursor:pointer;position:relative;padding:0 18px;margin:0 -18px;text-align:left;transition:background .28s,color .28s,border-color .28s}.member-row:last-of-type{border-bottom:1px solid var(--line)}.member-row:hover,.member-row.active{background:var(--ink);color:#fff;border-color:var(--ink)}.member-name{display:flex;align-items:center;font-size:clamp(1.8rem,4vw,4.8rem);line-height:.85;letter-spacing:-.07em;font-weight:800}.member-name i{font-style:normal;color:#77736d;margin-right:18px}.member-role{line-height:1.5;color:#55514b}.member-row:hover .member-name i,.member-row.active .member-name i,.member-row:hover .member-role,.member-row.active .member-role{color:rgba(255,255,255,.62)}.member-plus{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;font-size:var(--fs-18)}.member-row:hover .member-plus,.member-row.active .member-plus{background:#fff;color:#111;border-color:#fff}.profile-panel{position:absolute;z-index:5;width:min(390px,37vw);right:4%;top:74px;animation:profileIn .35s cubic-bezier(.16,1,.3,1)}@keyframes profileIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}.profile-photo{height:500px;position:relative;overflow:hidden;background:#ddd8ce;border:1px solid var(--line)}.portrait-placeholder{height:100%;display:grid;place-items:center;background:linear-gradient(145deg,#262626,#080808);color:var(--cream);position:relative}.portrait-placeholder:before,.portrait-placeholder:after{content:'';position:absolute;border:1px solid rgba(241,238,230,.18);border-radius:50%;aspect-ratio:1}.portrait-placeholder:before{width:70%}.portrait-placeholder:after{width:38%}.portrait-placeholder b{z-index:1;font-size:clamp(4rem,8vw,8rem);letter-spacing:-.1em}.portrait-placeholder span{position:absolute;left:20px;bottom:20px;font:var(--fs-9) 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase;opacity:.55}.profile-link{position:absolute;top:18px;right:18px;width:52px;height:52px;border-radius:50%;background:#fff;color:#111;text-decoration:none;display:grid;place-items:center;font-weight:900;font-size:var(--fs-18);opacity:0;transform:translateY(-8px);transition:.25s}.profile-photo:hover .profile-link{opacity:1;transform:none}.profile-description{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:20px 22px 22px;transform:translateY(101%);transition:transform .48s cubic-bezier(.16,1,.3,1)}.profile-photo:hover .profile-description{transform:none}.profile-description span{color:#77736d}.profile-description p{margin-top:10px;font-size:var(--fs-12);line-height:1.65;color:#44413c}.profile-info{padding:19px 20px 22px;background:#fff;border:1px solid var(--line);border-top:0}.profile-info h3{font-size:var(--fs-25);letter-spacing:-.05em}.profile-info p{color:#77736d;margin-top:7px}.team-note{margin-top:8vw;padding-top:22px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:8vw}.team-note p{font-size:clamp(1.4rem,2.6vw,2.5rem);line-height:1.15;letter-spacing:-.05em}.team-note span{color:#77736d}.team-cta{background:#111;color:var(--cream);padding:8vw 5vw;min-height:62vh;display:flex;flex-direction:column;justify-content:space-between}.team-cta h2{font-size:clamp(4rem,11vw,13rem)}.team-cta>div{display:flex;justify-content:space-between;align-items:end;gap:30px}.team-cta p{max-width:350px;color:#aaa69f;font-size:var(--fs-13);line-height:1.7}.team-cta a{background:var(--cream);color:#111;padding:17px 24px;text-decoration:none}@media(max-width:800px){.team-hero>div{grid-template-columns:1fr}.team-hero p{margin-top:35px}.profile-panel{position:fixed;left:0;right:0;bottom:0;top:auto;width:100%;margin:0;z-index:60;max-height:88vh;overflow-y:auto;background:var(--cream);border-top:1px solid var(--line);border-radius:22px 22px 0 0;padding:14px 5vw calc(20px + env(safe-area-inset-bottom));box-shadow:0 -18px 60px rgba(0,0,0,.35);animation:profileSheetIn .32s cubic-bezier(.16,1,.3,1)}@keyframes profileSheetIn{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}.profile-close{display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#111;padding:10px 18px;font:var(--fs-10) 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}.profile-close span{font-size:var(--fs-14);line-height:1}.profile-photo{height:min(96vw,380px)}.profile-panel .profile-mail{opacity:1;transform:none}.profile-panel .profile-description{position:static;transform:none;border:1px solid var(--line);border-top:0}.profile-photo{height:min(115vw,560px)}.member-row{grid-template-columns:1.2fr .9fr 38px;min-height:88px}.member-name{font-size:var(--fs-27)}}@media(max-width:560px){.team-nav{padding:0 6vw}.team-nav>div{display:none}.team-hero{padding:10vw 6vw}.team-directory-section{padding:14vw 6vw}.team-heading{display:block}.team-heading p{margin-top:25px}.directory-labels{display:none}.member-row{grid-template-columns:1fr 34px;padding:17px 12px;margin:0 -12px;gap:15px}.member-name{font-size:1.65rem}.member-name i{display:none}.member-role{grid-column:1;grid-row:2}.member-plus{grid-column:2;grid-row:1/3}.profile-panel{margin-top:15px}.profile-photo{height:125vw;max-height:540px}.team-note{grid-template-columns:1fr;gap:22px}.team-cta>div{flex-direction:column;align-items:start}}
 
 /* The profile follows the row currently under the cursor.
    pointer-events:none keeps it out of the hover path so the image
@@ -71,4 +71,508 @@
     .team-hero h1,
     .team-heading h2,
     .team-cta h2 { animation: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ORG CHART SECTION
+══════════════════════════════════════════════════════════════════════════ */
+
+.org-section {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 8vw 5vw 10vw;
+    border-top: 1px solid rgba(241,238,230,.08);
+}
+
+.org-section-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 8vw;
+    align-items: start;
+    padding-bottom: 6vw;
+    border-bottom: 1px solid rgba(241,238,230,.1);
+}
+
+.org-section-header > span {
+    font: 400 var(--fs-10) / 1 'DM Mono', monospace;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(241,238,230,.4);
+    padding-top: 6px;
+}
+
+.org-section-header h2 {
+    font-size: clamp(3.5rem, 8vw, 10rem);
+    line-height: .7;
+    letter-spacing: -.115em;
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+}
+
+.org-section-header p {
+    max-width: 380px;
+    font-size: var(--fs-13);
+    line-height: 1.75;
+    color: rgba(241,238,230,.5);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   TREE MEMBER CARDS — every team's members sit below its box; the hovered
+   (or click-pinned) box's cards pop up as active.
+══════════════════════════════════════════════════════════════════════════ */
+
+.tree-members { animation: profileIn .35s cubic-bezier(.16,1,.3,1); }
+
+.member-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 1.5rem;
+    width: 280px;
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(0,0,0,.05);
+    display: flex;
+    flex-direction: column;
+    opacity: .92;
+    transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s, border-color .3s, opacity .3s;
+}
+
+/* The hovered / pinned team's cards pop up */
+.member-card--active {
+    opacity: 1;
+    border-color: var(--ink);
+    box-shadow: 0 18px 44px rgba(0,0,0,.14);
+    transform: translateY(-6px);
+}
+
+.member-card-photo {
+    height: 180px;
+    margin-bottom: 1.2rem;
+    background: rgba(17,17,17,.04);
+    position: relative;
+    overflow: hidden;
+}
+.member-card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.member-card-initials { width: 100%; height: 100%; display: grid; place-items: center; font-size: 2rem; color: #aaa; }
+.member-card-name { margin: 0 0 .5rem; font-size: 1.2rem; color: var(--ink); line-height: 1.1; }
+.member-card-role { margin: 0 0 1rem; font-size: .85rem; color: #77736d; line-height: 1.4; flex: 1; }
+.member-card-contact { display: flex; gap: 10px; align-items: center; border-top: 1px solid var(--line); padding-top: 1rem; }
+.member-card-mail { color: #e63229; display: grid; place-items: center; transition: opacity .2s; }
+.member-card-mail:hover { opacity: .7; }
+.member-card-linkedin {
+    width: 22px; height: 22px;
+    border: 1px solid var(--line); border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 9px; color: var(--ink); text-decoration: none;
+    transition: background .2s, color .2s, border-color .2s;
+}
+.member-card-linkedin:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+@media (max-width: 800px) {
+    .tree-members .on-children { flex-direction: column; }
+    .member-card { width: 240px; }
+}
+
+/* Scrollable wrapper */
+.org-chart-wrap {
+    margin-top: 6vw;
+    overflow-x: auto;
+    padding-bottom: 2rem;
+    /* subtle dotted background like the image */
+    background-image: radial-gradient(rgba(241,238,230,.07) 1px, transparent 1px);
+    background-size: 24px 24px;
+    border-radius: 4px;
+    padding-top: 3rem;
+}
+
+.org-chart-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 60px;
+    min-width: max-content;
+    padding: 0 3rem 3rem;
+}
+
+.org-tree-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ── Advisors (as tree nodes) ── */
+.on-box--advisory {
+    border: 1.5px solid rgba(230, 50, 41, 0.55);
+    background: rgba(230, 50, 41, 0.10);
+    min-width: 150px;
+}
+.on-box--advisory .on-title { color: #e63229; }
+.on-box--advisory:hover {
+    background: rgba(230, 50, 41, 0.20);
+    border-color: #e63229;
+}
+
+/* Advisor-level group labels (Mission Advisors / Industry Advisors / Faculty Advisors)
+   — shown inside the tree with a visible stroke like the rest of the org chart,
+   not faded out. */
+.on-box--advisor {
+    border: 1px solid rgba(241,238,230,0.22);
+    background: rgba(241,238,230,0.04);
+    opacity: 1;
+}
+.on-box--advisor:hover {
+    background: rgba(241,238,230,0.10);
+    border-color: rgba(241,238,230,0.5);
+    opacity: 1;
+}
+.on-box--advisor .on-name { font-size: 0.72rem; }
+
+/* The three advisor-type headers (Mission / Industry / Faculty Advisors)
+   get the red accent line like other title boxes in the tree. */
+.on-box--advisor .on-title {
+    color: #e63229;
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+}
+
+/* Full-width horizontal connector from the advisors row down to the rest
+   of the org chart. Sits between the Advisory Committee / advisor children
+   and the ORG tree below it. */
+.on-vh-connector {
+    width: 1px;
+    height: 28px;
+    background: rgba(241,238,230,.2);
+    flex-shrink: 0;
+    margin-top: -1px;
+}
+
+/* ── Org Node ── */
+.on {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.on-box {
+    border: 1px solid rgba(241,238,230,.18);
+    padding: 10px 16px;
+    min-width: 130px;
+    max-width: 190px;
+    text-align: center;
+    background: rgba(241,238,230,.04);
+    transition: background .2s, border-color .2s;
+    cursor: default;
+}
+
+.on-box:hover {
+    background: rgba(241,238,230,.09);
+    border-color: rgba(241,238,230,.35);
+}
+
+.on-box--hl {
+    background: #e63229 !important;
+    border-color: #e63229 !important;
+}
+
+.on-box--vacant { opacity: .42; }
+
+.on-title {
+    display: block;
+    font: 400 0.67rem / 1.45 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    color: rgba(241,238,230,.58);
+}
+
+.on-box--hl .on-title { color: rgba(255,255,255,.85); }
+
+.on-name {
+    display: block;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--cream);
+    margin-top: 5px;
+    line-height: 1.3;
+}
+
+/* ── Connectors ── */
+.on-vline {
+    width: 1px;
+    height: 28px;
+    background: rgba(241,238,230,.2);
+    flex-shrink: 0;
+}
+
+.on-children {
+    display: flex;
+    gap: 0;
+    position: relative;
+}
+
+/* Full-width horizontal bar at top of children */
+.on-children::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(241,238,230,.2);
+}
+
+.on-child-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px;
+    position: relative;
+}
+
+/* Vertical connector from horizontal bar down to child box */
+.on-child-slot::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 28px;
+    background: rgba(241,238,230,.2);
+}
+
+/* Cover left-outer half of horizontal bar on first child */
+.on-children > .on-child-slot:first-child::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 1px;
+    background: var(--ink);
+}
+
+/* Cover right-outer half of horizontal bar on last child */
+.on-children > .on-child-slot:last-child::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 1px;
+    background: var(--ink);
+}
+
+/* Only child: cover entire horizontal bar (higher specificity wins) */
+.on-children > .on-child-slot:first-child:last-child::after {
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
+/* ── Side panels ── */
+.org-side-panels {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    flex-shrink: 0;
+    padding-top: 3rem;
+}
+
+.org-side-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.org-side-label {
+    background: #e63229;
+    color: #fff;
+    font: 600 0.66rem / 1 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    padding: 6px 14px;
+    align-self: stretch;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.org-pipeline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.org-pipeline .on-box {
+    min-width: 160px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   TEAM ACCORDION GROUPS
+══════════════════════════════════════════════════════════════════════════ */
+
+.team-groups {
+    margin-top: 4vw;
+}
+
+.team-group {
+    border-top: 1px solid var(--line);
+}
+
+.team-groups > .team-group:last-child {
+    border-bottom: 1px solid var(--line);
+}
+
+/* Accordion trigger button */
+.team-group-header {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: center;
+    gap: 8vw;
+    padding: 30px 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: background .22s;
+}
+
+.team-group-header:hover {
+    background: rgba(17,17,17,.03);
+    padding-left: 14px;
+    padding-right: 14px;
+    margin: 0 -14px;
+    width: calc(100% + 28px);
+}
+
+.team-group-label {
+    display: block;
+    font: 400 var(--fs-10) / 1 'DM Mono', monospace;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #77736d;
+    margin-bottom: 10px;
+}
+
+.team-group-name {
+    font-size: clamp(1.8rem, 3.5vw, 4.2rem);
+    letter-spacing: -.08em;
+    line-height: .88;
+    text-transform: uppercase;
+    font-weight: 800;
+    transition: color .2s;
+}
+
+.team-group--open .team-group-name {
+    color: #e63229;
+}
+
+.team-group-right {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 20px;
+}
+
+.team-group-desc {
+    font-size: var(--fs-12);
+    line-height: 1.65;
+    color: #77736d;
+    max-width: 320px;
+    margin: 0;
+}
+
+.team-group-count {
+    font: 400 var(--fs-10) / 1 'DM Mono', monospace;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #aaa69f;
+    white-space: nowrap;
+}
+
+.team-group-toggle {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 1.6rem;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: background .22s, color .22s, border-color .22s;
+    user-select: none;
+}
+
+.team-group--open .team-group-toggle {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+}
+
+/* Slide-in animation for expanded directory */
+@keyframes team-group-expand {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.team-group .directory {
+    animation: team-group-expand .28s cubic-bezier(.16,1,.3,1) both;
+    padding-bottom: 28px;
+    border-top: 1px solid var(--line);
+    margin-top: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .org-section-header {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .org-chart-inner {
+        flex-direction: column;
+        align-items: center;
+    }
+    .org-side-panels {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-top: 0;
+    }
+    .team-group-header {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .team-group-right {
+        grid-template-columns: 1fr auto auto;
+    }
+}
+
+@media (max-width: 560px) {
+    .team-group-right {
+        grid-template-columns: 1fr auto;
+    }
+    .team-group-count { display: none; }
+    .org-side-panels { flex-direction: column; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   STICKY FOLD BACKGROUNDS
+   The pinned heading is washed away by the section's own content sliding over
+   it, so each folding block carries the section's exact background colour.
+══════════════════════════════════════════════════════════════════════════ */
+
+.org-chart-wrap.sticky-fold {
+    background: var(--ink);
+}
+
+/* The section header pins and its own chart slides up over it. */
+.org-section-header.sticky-head {
+    background: var(--ink);
+}
+
+.team-heading.sticky-head {
+    background: var(--cream);
+}
+
+.directory.sticky-fold {
+    background: var(--cream);
 }
