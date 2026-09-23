@@ -57,12 +57,24 @@
     }
     .media-lightbox { padding: 20px; }
     .media-lightbox-close { top: 14px; right: 14px; }
-    /* Keep the single-word title inside the phone viewport. */
-    .media-hero-content h1 { font-size: 16vw; line-height: .78; letter-spacing: -.09em; white-space: nowrap; }
+    /* Keep the single-word titles inside the phone viewport.
+       The site-wide rule in globals.css forces the Zade display face on every
+       h1/h2 together with `letter-spacing:.012em !important`, which is both far
+       wider than the Inter these page rules were tuned for and impossible to
+       tighten from here, so the type has to be sized off its measured glyph
+       width instead: "Media." is ~5.2x its font-size, so 15vw still leaves
+       ~50px of slack at 390px wide. `overflow-wrap` lets a longer title wrap
+       instead of bleeding off the edge. */
+    .media-hero-content h1 { font-size: 15vw; line-height: .92; white-space: normal; overflow-wrap: break-word; }
+    /* "Archive." is the widest word on the page (~7.06x its font-size) and its
+       section only frees up 88vw, so it has to stay under 12vw to avoid being
+       clipped by the page's `overflow-x: clip`. */
+    .media-archive h2 { font-size: min(12vw, 3.8rem); line-height: .92; }
     /* A compact, touch-driven film strip: swipe right instead of relying on
-       the desktop auto-animation. */
-    .media-motion { overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; padding: 11vw 0 8vw; scrollbar-width: thin; scrollbar-color: #777 transparent; }
-    .media-track { width: max-content; gap: 12px; padding: 0 6vw 14px; animation: none; scroll-snap-type: x mandatory; }
-    .media-card, .media-card-wide { width: 68vw; height: 56vw; scroll-snap-align: start; }
+       the desktop auto-animation. The snap belongs on the scroll container
+       (.media-motion), not on the moving track inside it. */
+    .media-motion { overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; padding: 7vw 0 6vw; scroll-snap-type: x mandatory; scroll-padding-inline: 6vw; scrollbar-width: thin; scrollbar-color: #777 transparent; }
+    .media-track { width: max-content; gap: 12px; padding: 0 6vw 10px; animation: none; }
+    .media-card, .media-card-wide { width: 62vw; height: 44vw; scroll-snap-align: start; }
     .media-card img { object-fit: cover; }
 }

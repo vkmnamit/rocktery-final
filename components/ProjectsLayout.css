@@ -627,3 +627,21 @@ body {
     font-size: clamp(1.9rem, 8vw, 3rem)
   }
 }
+
+/* ---------- SMALL-SCREEN DISPLAY TYPE ---------- */
+/* "Rockets." is 7.7x its own font size and the hero heading has no side padding
+   to hide a bleed, so `clamp(2.4rem, 13.5vw, …)` measured 405px on a 390px
+   screen (and 798px at 768) — wider than the viewport, and `.hero`'s
+   `overflow: hidden` cut the first and last letters off. 12.4vw leaves that
+   line inside the frame all the way down to 320px, and the `.end` heading
+   ("Launch.") needs its own scale because the 3.8rem floor put it 45px past
+   the 350px content box the section's 20px padding leaves. */
+@media(max-width:850px) {
+  .hero h1 {
+    font-size: clamp(2.2rem, 12.4vw, 6.5rem)
+  }
+
+  .end h2 {
+    font-size: clamp(2.4rem, 12vw, 13rem)
+  }
+}

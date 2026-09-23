@@ -6,10 +6,18 @@
     height: 100vh;
 }
 
-.home-reference-hero h1 { font-family: var(--font-zade) !important; font-size: clamp(4.2rem, min(9vw, 13vh), 10.5rem); line-height: .9; letter-spacing: .045em !important; word-spacing: .12em !important; max-width: 100%; }
+/* The Zade face runs ~10.6x its font size for the 11-character "BOUNDARIES.",
+   so at min(9vw, 13vh) that line measured 1221px inside the hero's 1152px
+   content box (1440 padding leaves 90vw) and the hero's `overflow:hidden` cut
+   the final letter — measured at 700/768/1024/1280 wide. 8.4vw is the largest
+   value that always stays inside. */
+.home-reference-hero h1 { font-family: var(--font-zade) !important; font-size: clamp(3.4rem, min(8.4vw, 13vh), 10.5rem); line-height: .9; letter-spacing: .045em !important; word-spacing: .12em !important; max-width: 100%; }
 .home-reference-intro h2, .home-reference-impact h2, .home-reference-work h2, .home-reference-missions h2 { font-size: clamp(2.8rem, 5.5vw, 6rem); line-height: .94; }
 @media (max-width: 650px) {
-    .home-reference-hero h1 { font-size: 11vw; line-height: .96; letter-spacing: -.025em !important; }
+    /* "Boundaries." is a single 11-character word in the Zade face (~9.8x its
+       font size), so at 11vw it measured 403px inside the hero's 343px column
+       and the hero's `overflow:hidden` clipped the end of the word. */
+    .home-reference-hero h1 { font-size: 8.6vw; line-height: .96; letter-spacing: -.025em !important; }
     .home-reference-hero h1 .home-reveal-line { white-space: normal; overflow: visible; }
     .home-reference-ticker > div { animation-duration: 34s; }
 }
@@ -17,6 +25,26 @@
 
 /* Very small phones: the wide display face must stay inside the viewport. */
 @media (max-width: 420px) {
-    .home-reference-hero h1 { font-size: 10.5vw; letter-spacing: -.025em; }
+    .home-reference-hero h1 { font-size: 8.6vw; letter-spacing: -.025em; }
     .home-reference-hero h1 .home-reveal-line { white-space: normal; overflow: visible; }
+}
+
+/* ── "Built by students." ───────────────────────────────────────────────────
+   HomeLayout.css pins this heading at clamp(3rem, 6vw, 7rem) with `!important`,
+   so on a 1440 laptop the Zade face rendered it at 86.4px. Its min-content
+   ("students." = 689px) then forced the intro grid's first column open and
+   squeezed the copy beside it into 499px, while line-height .96 left the two
+   lines sitting on top of each other. Smaller type with roomier leading gives
+   the heading and the text next to it space, and `overflow-wrap` keeps a long
+   word from ever widening the grid past the viewport. */
+.home-reference-intro h2.druk-display {
+    font-size: clamp(2.6rem, 4.6vw, 4.6rem) !important;
+    line-height: 1.12 !important;
+    overflow-wrap: break-word;
+}
+@media (max-width: 650px) {
+    /* On a phone the heading must fit its 88vw column: at the 3rem floor
+       "students." measured 383px in a 343px box, which dragged the column —
+       and the paragraph under it — 35px past the right edge of the viewport. */
+    .home-reference-intro h2.druk-display { font-size: clamp(1.9rem, 8.7vw, 3.1rem) !important; line-height: 1.08 !important; overflow-wrap: anywhere; }
 }

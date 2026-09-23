@@ -1,1 +1,10 @@
-.home-reference-wordmark{height:clamp(280px,44vw,540px);min-height:280px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#000;color:#fff;border-bottom:1px solid rgba(255,255,255,.1)}.home-reference-wordmark>div{display:block;width:180vw;will-change:transform}.home-reference-wordmark .giant-text{position:static;margin:0;width:180vw;font-size:9.75vw;line-height:.9;letter-spacing:.01em;white-space:nowrap;color:#fff;opacity:.8;filter:none;transform:none}@media(max-width:650px){.home-reference-wordmark{min-height:150px;height:38vw;padding:0 5vw}.home-reference-wordmark>div,.home-reference-wordmark .giant-text{width:100%}.home-reference-wordmark .giant-text{font-size:8.5vw;letter-spacing:-.03em;text-align:center;opacity:1}}
+.home-reference-wordmark{height:clamp(280px,44vw,540px);min-height:280px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#000;color:#fff;border-bottom:1px solid rgba(255,255,255,.1)}.home-reference-wordmark>div{display:block;width:180vw;will-change:transform}.home-reference-wordmark .giant-text{position:static;margin:0;width:180vw;font-size:9.75vw;line-height:.9;letter-spacing:.01em;white-space:nowrap;color:#fff;opacity:.8;filter:none;transform:none}.home-reference-wordmark .giant-text[aria-hidden="true"]{display:none}@keyframes wordmark-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}@media(max-width:650px){.home-reference-wordmark{min-height:150px;height:38vw;padding:0 5vw}
+  /* The GSAP scroll-scrub is skipped on phones (see HomeLayout.tsx), so the
+     wordmark used to sit frozen — and at 8.5vw the single copy measured 438px
+     inside a 351px box, so the section's `overflow:hidden` clipped both its
+     ends. Two copies (the second is aria-hidden) scroll as one continuous
+     marquee, and the size comes down until a copy fits the 90vw band. The
+     `.5em` trailing padding makes -50% of the wrapper exactly one copy. */
+  .home-reference-wordmark>div{display:flex;width:max-content;animation:wordmark-marquee 22s linear infinite}
+  .home-reference-wordmark .giant-text{display:block;width:max-content;font-size:7.2vw;letter-spacing:-.03em;text-align:left;opacity:1;padding-right:.5em}
+  .home-reference-wordmark .giant-text[aria-hidden="true"]{display:block}}

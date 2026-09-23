@@ -37,3 +37,18 @@
 .sponsor-end:after{content:"";position:absolute;z-index:0;pointer-events:none;width:520px;height:520px;left:var(--pointer-x);top:var(--pointer-y);transform:translate(-50%,-50%);border-radius:50%;background:linear-gradient(rgba(242,237,228,.28) 1px,transparent 1px),linear-gradient(90deg,rgba(242,237,228,.28) 1px,transparent 1px),radial-gradient(circle,rgba(255,91,40,.28),rgba(255,91,40,.07) 40%,transparent 72%);background-size:clamp(32px,4vw,66px) clamp(32px,4vw,66px),clamp(32px,4vw,66px) clamp(32px,4vw,66px),100% 100%;mix-blend-mode:screen}
 .sponsor-title h2{font-size:clamp(2.2rem,min(6.1vw,10.5vh),6.9rem);line-height:1.1;max-width:100%}
 .sponsor-hero h1{width:100%;max-width:100%;font-size:clamp(4rem,10vw,12rem);line-height:.9;letter-spacing:.02em}
+
+/* ── Small-screen display type ─────────────────────────────────────────────
+   The two rules above end in floors this layout cannot honour on a phone:
+   "Partners." is 8.47x its own font size, so the 4rem floor put it at 542px on
+   a 390px screen, and the sponsor names' 2.2rem floor put "OmniDynamics." at
+   423px inside the 86vw column the title reserves (it spans `0 7vw`). In both
+   cases the section's `overflow: hidden` sliced the type off at the edges.
+   Sizing the hero from the viewport keeps a single unbreakable word inside the
+   frame, and 6.8vw keeps the longest partner name inside its column. */
+@media(max-width:850px){
+  .sponsor-hero h1{font-size:clamp(2.1rem,10.4vw,5rem)}
+  /* The floor has to stay under 7.15vw so the vw term keeps governing on a
+     320px screen, where 86vw of column is only 275px. */
+  .sponsor-title h2{font-size:clamp(1.35rem,6.8vw,3.5rem)}
+}
