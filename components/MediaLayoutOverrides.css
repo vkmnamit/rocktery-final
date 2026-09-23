@@ -57,4 +57,12 @@
     }
     .media-lightbox { padding: 20px; }
     .media-lightbox-close { top: 14px; right: 14px; }
+    /* Keep the single-word title inside the phone viewport. */
+    .media-hero-content h1 { font-size: 16vw; line-height: .78; letter-spacing: -.09em; white-space: nowrap; }
+    /* A compact, touch-driven film strip: swipe right instead of relying on
+       the desktop auto-animation. */
+    .media-motion { overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; padding: 11vw 0 8vw; scrollbar-width: thin; scrollbar-color: #777 transparent; }
+    .media-track { width: max-content; gap: 12px; padding: 0 6vw 14px; animation: none; scroll-snap-type: x mandatory; }
+    .media-card, .media-card-wide { width: 68vw; height: 56vw; scroll-snap-align: start; }
+    .media-card img { object-fit: cover; }
 }

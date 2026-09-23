@@ -1,343 +1,88 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import type { CSSProperties, MouseEvent } from "react";
-import { ADVISORS, ADVISORY_COMMITTEE, initials, ORG, RAW, TEAMS, toMember } from "./teamData";
-import type { OrgNodeData } from "./teamData";
+import { useEffect, useState } from "react";
+import { initials, ORG, RAW, TEAMS } from "./teamData";
+import type { Member, OrgNodeData, Team } from "./teamData";
 import "./TeamLayout.css";
+import "./TeamTree.css";
 
-/* ══════════════════════════════════════════════════════════════════════════
-   Page component — all member info lives in ./teamData
-══════════════════════════════════════════════════════════════════════════ */
-/* ══════════════════════════════════════════════════════════════════════════
-   Org-chart node (recursive)
-══════════════════════════════════════════════════════════════════════════ */
-
-function OrgChartNode({ node, openTeam, setOpenTeam, onHoverTeam }: { node: OrgNodeData, openTeam: string | null, setOpenTeam: (id: string | null) => void, onHoverTeam: (id: string | null) => void }) {
-    const hasChildren = !!node.children?.length;
-    const isInteractive = !!node.teamId;
-    const isOpen = isInteractive && openTeam === node.teamId;
-    
-    // Find the team members if this node corresponds to a team
-    const teamData = isInteractive ? TEAMS.find(t => t.id === node.teamId) : null;
-    /* All teams' member cards sit below their box even with the mouse away;
-       hovering (or click-pinning) a box pops that team's cards up as active. */
-    const hasMembers = !!teamData && teamData.members.length > 0;
-
-    return (
-        <div
-            className="on"
-            /* Hovering anywhere outside this node's own subtree (box + popped-up
-               member cards) removes the hover popup, unless it was pinned by a click. */
-            onMouseLeave={isInteractive ? () => onHoverTeam(null) : undefined}
-        >
-            {isInteractive ? (
-                <button
-                    className={[
-                        "on-box",
-                        node.highlight ? "on-box--hl" : "",
-                        node.vacant ? "on-box--vacant" : "",
-                        isOpen ? "on-box--active" : ""
-                    ].filter(Boolean).join(" ")}
-                    /* Hover OR click both pop the member cards up. Click pins
-                       them open (stays after the mouse leaves); hover alone
-                       clears as soon as the mouse moves away. */
-                    onMouseEnter={() => onHoverTeam(node.teamId!)}
-                    onClick={() => setOpenTeam(isOpen ? null : node.teamId!)}
-                    style={{
-                        cursor: "pointer",
-                        border: isOpen ? "1px solid var(--cream)" : undefined,
-                        background: isOpen ? "var(--cream)" : undefined,
-                        color: isOpen ? "var(--ink)" : undefined,
-                        transition: "all 0.3s ease"
-                    }}
-                >
-                    <span className="on-title" style={{ color: isOpen ? "rgba(17,17,17,.6)" : undefined }}>{node.title}</span>
-                    {node.name && <span className="on-name" style={{ color: isOpen ? "var(--ink)" : undefined }}>{node.name}</span>}
-                </button>
-            ) : (
-                <div className={[
-                    "on-box",
-                    node.highlight ? "on-box--hl" : "",
-                    node.vacant ? "on-box--vacant" : "",
-                ].filter(Boolean).join(" ")}>
-                    <span className="on-title">{node.title}</span>
-                    {node.name && <span className="on-name">{node.name}</span>}
-                </div>
-            )}
-
-            {/* All teams' members stay below their box even with the mouse away;
-                the hovered (or click-pinned) box's cards pop up as active. */}
-            {hasMembers && (
-                <div className="tree-members">
-                    <div className="on-vline" />
-                    <div className="on-children" style={{ gap: "20px" }}>
-                        {teamData!.members.map((member) => (
-                            <div key={member.name} className="on-child-slot">
-                                <article className={`member-card${isOpen ? " member-card--active" : ""}`}>
-                                    <div className="member-card-photo">
-                                        {member.photo ? (
-                                            <img src={member.photo} alt={member.name} />
-                                        ) : (
-                                            <div className="member-card-initials"><b>{initials(member.name)}</b></div>
-                                        )}
-                                    </div>
-                                    <h4 className="member-card-name">{member.name}</h4>
-                                    <p className="member-card-role">{member.role}</p>
-                                    <div className="member-card-contact">
-                                        <a className="member-card-mail" href={`mailto:${member.email}`} aria-label={`Email ${member.name}`}>
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                                        </a>
-                                        <a className="member-card-linkedin" href={member.linkedin} target="_blank" rel="noreferrer" aria-label={`${member.name} on LinkedIn`}>in</a>
-                                    </div>
-                                </article>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {/* Render traditional children below members (or instead of members if not open) */}
-            {hasChildren && (
-                <>
-                    <div className="on-vline" />
-                    <div className="on-children">
-                        {node.children!.map(child => (
-                            <div key={child.id} className="on-child-slot">
-                                <OrgChartNode node={child} openTeam={openTeam} setOpenTeam={setOpenTeam} onHoverTeam={onHoverTeam} />
-                            </div>
-                        ))}
-                    </div>
-                </>
-            )}
-        </div>
-    );
+function OrgChartNode({ node, expanded, toggle, desktop, openPreview, setPreview }: { node: OrgNodeData; expanded: Set<string>; toggle: (id: string) => void; desktop: boolean; openPreview: string | null; setPreview: (id: string | null) => void }) {
+    const hasChildren = Boolean(node.children?.length);
+    const isOpen = expanded.has(node.id);
+    const team = node.teamId ? TEAMS.find(item => item.id === node.teamId) : null;
+    const canSelect = hasChildren || Boolean(team);
+    const showChildren = desktop || isOpen;
+    return <div className="on">
+        <button type="button" className={["on-box", "on-box--toggle", node.highlight ? "on-box--hl" : "", node.vacant ? "on-box--vacant" : "", isOpen ? "on-box--open" : ""].filter(Boolean).join(" ")}
+            onMouseEnter={() => desktop && team && setPreview(node.teamId!)}
+            onClick={() => { if (team) setPreview(openPreview === node.teamId ? null : node.teamId!); if (!desktop && hasChildren) toggle(node.id); }}
+            aria-expanded={hasChildren ? showChildren : undefined}
+            aria-label={canSelect ? `${showChildren ? "Collapse" : "Expand"} ${node.title}` : node.title} disabled={!canSelect}>
+            <span className="on-title">{node.title}</span>
+            {node.name && <span className="on-name">{node.name}</span>}
+            {hasChildren && !desktop && <span className="on-toggle-mark">{isOpen ? "−" : "+"}</span>}
+        </button>
+        {hasChildren && showChildren && <div className="on-branch"><div className="on-vline" /><div className="on-children">
+            {node.children!.map(child => <div key={child.id} className="on-child-slot"><OrgChartNode node={child} expanded={expanded} toggle={toggle} desktop={desktop} openPreview={openPreview} setPreview={setPreview} /></div>)}
+        </div></div>}
+    </div>;
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   Main component
-══════════════════════════════════════════════════════════════════════════ */
+function OrgTeamPanel({ team, onClose }: { team: Team; onClose: () => void }) {
+    return <div className="org-team-panel" role="region" aria-label={`${team.name} members`}>
+        <div className="org-team-panel-head"><div><span>Subsystem team</span><h3>{team.name}</h3></div><button type="button" onClick={onClose} aria-label="Close team profiles">×</button></div>
+        <div className="org-member-cards">{team.members.map(member => <article className="org-member-card" key={member.name}>
+            <img src={member.photo} alt={member.name} />
+            <div><span>{member.role}</span><h4>{member.name}</h4><p>{member.description || "Profile details will be added here."}</p>
+                <nav><a href={`mailto:${member.email}`} aria-label={`Email ${member.name}`}>✉ <b>Email</b></a><a href={member.linkedin} target="_blank" rel="noreferrer" aria-label={`${member.name} on LinkedIn`}><strong>in</strong><b>LinkedIn</b></a></nav>
+            </div>
+        </article>)}</div>
+    </div>;
+}
+
+function MemberProfile({ member, onClose }: { member: Member; onClose: () => void }) {
+    return <article className="member-profile-inline member-profile-popover" role="dialog" aria-label={`${member.name} profile`}>
+        <button type="button" className="member-profile-close" onClick={onClose} aria-label="Close profile">×</button>
+        <div className="member-profile-image">{member.photo ? <img src={member.photo} alt={member.name} /> : <b>{initials(member.name)}</b>}</div>
+        <div className="member-profile-copy"><span>Mission profile</span><h4>{member.name}</h4>
+            <p>{member.description || "Profile details will be added here."}</p><div><a href={`mailto:${member.email}`}>Email</a><a href={member.linkedin} target="_blank" rel="noreferrer">LinkedIn</a></div>
+        </div>
+    </article>;
+}
 
 export default function TeamLayout() {
-    /* Click pins a team's member cards open (survives the mouse leaving);
-       hover pops them up temporarily and wins while the cursor is on a box. */
-    const [pinnedTeam, setPinnedTeam] = useState<string | null>(null);
-    const [hoverTeam,  setHoverTeam]  = useState<string | null>(null);
-    const openTeam = hoverTeam ?? pinnedTeam;
-    /* Directory (below the tree): one member per row; hovering or clicking a
-       row reveals their profile card, like the original team page. */
-    const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    const [profileTop,  setProfileTop]  = useState(74);
-    const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const active = activeIndex === null ? null : toMember(RAW[activeIndex]);
+    const [expandedNodes, setExpandedNodes] = useState<Set<string>>(() => new Set());
+    const [openTeam, setOpenTeam] = useState<string | null>(null);
+    const [openMember, setOpenMember] = useState<string | null>(null);
+    const [desktop, setDesktop] = useState(false);
+    useEffect(() => { RAW.forEach(row => { const image = new Image(); image.src = row[4]; }); }, []);
+    useEffect(() => { const media = window.matchMedia("(min-width: 701px)"); const update = () => setDesktop(media.matches); update(); media.addEventListener("change", update); return () => media.removeEventListener("change", update); }, []);
+    const toggleNode = (id: string) => setExpandedNodes(current => { const next = new Set(current); next.has(id) ? next.delete(id) : next.add(id); return next; });
+    const toggleTeam = (id: string) => { setOpenTeam(current => current === id ? null : id); setOpenMember(null); };
 
-    /* Preload all portraits */
-    useEffect(() => {
-        RAW.forEach(row => { const img = new Image(); img.src = row[4]; });
-    }, []);
-
-    const clearHoverTimer = () => {
-        if (hoverTimer.current) { clearTimeout(hoverTimer.current); hoverTimer.current = null; }
-    };
-
-    const selectMember = (index: number, target: HTMLElement) => {
-        // Small delay ignores accidental fly-by hovers and stops flicker between rows.
-        clearHoverTimer();
-        hoverTimer.current = setTimeout(() => {
-            setActiveIndex(index);
-            // Clamp so the floating card never slides past the directory bottom.
-            const directory = target.closest(".directory") as HTMLElement | null;
-            const rawTop = target.offsetTop;
-            const maxTop = directory ? Math.max(74, directory.offsetHeight - 680) : rawTop;
-            setProfileTop(Math.min(rawTop, maxTop));
-        }, 70);
-    };
-
-    const cancelHover = () => { clearHoverTimer(); setActiveIndex(null); };
-
-    /* Click: pin (or unpin) a team's member cards. Clears the hover state so the
-       pinned selection is what stays visible after the mouse moves away. */
-    const setOpenTeam = (id: string | null) => { setPinnedTeam(id); setHoverTeam(null); };
-
-    /* Hover: temporarily pop the member cards up; removed when the mouse leaves. */
-    const onHoverTeam = (id: string | null) => setHoverTeam(id);
-
-    return (
-        <main className="team-page" onMouseLeave={cancelHover}>
-
-            {/* ── 01 Hero ─────────────────────────────────────────── */}
-            <section className="team-hero">
-                <span className="sticky-head">01 / People behind the mission</span>
-                <div>
-                    <h1>Meet<br />the<br />Team.</h1>
-                    <p>A multidisciplinary team of engineers, designers and builders taking ambitious ideas from concept to flight.</p>
-                </div>
-            </section>
-
-            {/* ── 02 Org Chart ────────────────────────────────────── */}
-            <section className="org-section" id="org">
-                <div className="org-section-header sticky-head">
-                    <span>02 / Organization</span>
-                    <div>
-                        <h2>Org<br />Structure.</h2>
-                        <p>A mission-critical hierarchy of sub-teams unified under a single leadership layer.</p>
-                    </div>
-                </div>
-
-                <div className="org-chart-wrap sticky-fold">
-                    <div className="org-chart-inner">
-
-                        {/* Main tree */}
-                        {/* Main tree: Advisory Committee at the top, then the rest below */}
-                        <div className="org-tree-center">
-                            {/* Advisory Committee — at the very top of the org chart, above Mission Captain.
-                                Renders the same way as the rest of the tree: a parent box with its children
-                                connected by org-chart lines. The three advisor types are drawn with their
-                                individual advisor names below them (built from ADVISORY_COMMITTEE). */}
-                            <OrgChartNode node={ADVISORY_COMMITTEE} openTeam={openTeam} setOpenTeam={setOpenTeam} onHoverTeam={onHoverTeam} />
-                            {/* Horizontal connector from advisors down to the rest of the tree */}
-                            <div className="on-vh-connector" aria-hidden="true" />
-                            <OrgChartNode node={ORG} openTeam={openTeam} setOpenTeam={setOpenTeam} onHoverTeam={onHoverTeam} />
-                        </div>
-
-                        {/* Side panels */}
-                        <div className="org-side-panels">
-                            <div className="org-side-panel">
-                                <div className="org-side-label">Pipeline</div>
-                                <div className="org-pipeline">
-                                    <div className="on-box"><span className="on-title">Associate Engineer / Officer</span></div>
-                                    <div className="on-vline" />
-                                    <div className="on-box"><span className="on-title">Junior Engineer / Officer</span></div>
-                                    <div className="on-vline" />
-                                    <div className="on-box"><span className="on-title">Trainee</span></div>
-                                </div>
-                            </div>
-                            <div className="org-side-panel">
-                                <div className="org-side-label">Hierarchy</div>
-                                <div className="org-pipeline">
-                                    <div className="on-box"><span className="on-title">Advisory Committee</span></div>
-                                    <div className="on-vline" />
-                                    <div className="on-box"><span className="on-title">Executive Committee</span></div>
-                                    <div className="on-vline" />
-                                    <div className="on-box"><span className="on-title">Subsystem Leads</span></div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </section>
-
-            {/* ── 03 Directory — one member per row, hover/click reveals profile ── */}
-            <section className="team-directory-section" id="team">
-                <div className="team-heading sticky-head">
-                    <h2>
-                        Our
-                        <br />
-                        People.
-                    </h2>
-                    <p>Move over a member to reveal their profile. Each image slot is ready for an individual portrait.</p>
-                </div>
-
-                <div
-                    className={`directory sticky-fold${active ? " has-hover" : ""}`}
-                    onMouseLeave={() => setActiveIndex(null)}
-                    onMouseMove={(event) => {
-                        const target = event.target as HTMLElement;
-                        if (!target.closest(".member-row") && !target.closest(".profile-panel")) setActiveIndex(null);
-                    }}
-                >
-                    <div className="directory-labels">
-                        <span>Team member</span>
-                        <span>Role / responsibility</span>
-                    </div>
-
-                    {RAW.map((row, index) => {
-                        const member = toMember(row);
-                        return (
-                            <button
-                                type="button"
-                                className={`member-row${activeIndex === index ? " active" : ""}`}
-                                key={member.name}
-                                onMouseEnter={(event: MouseEvent<HTMLButtonElement>) => selectMember(index, event.currentTarget)}
-                                onFocus={(event) => selectMember(index, event.currentTarget)}
-                                onClick={(event) => {
-                                    // Phones have no hover — the + button toggles the photo popup.
-                                    clearHoverTimer();
-                                    if (activeIndex === index) {
-                                        setActiveIndex(null);
-                                    } else {
-                                        const target = event.currentTarget;
-                                        setActiveIndex(index);
-                                        const directory = target.closest(".directory") as HTMLElement | null;
-                                        const rawTop = target.offsetTop;
-                                        const maxTop = directory ? Math.max(74, directory.offsetHeight - 680) : rawTop;
-                                        setProfileTop(Math.min(rawTop, maxTop));
-                                    }
-                                }}
-                                aria-expanded={activeIndex === index}
-                            >
-                                <span className="member-name">
-                                    <i>{String(index + 1).padStart(2, "0")}</i>
-                                    {member.name}
-                                </span>
-                                <span className="member-role">{member.role}</span>
-                                <span className="member-plus">{activeIndex === index ? "×" : "+"}</span>
-                            </button>
-                        );
-                    })}
-
-                    {active && (
-                        <aside className="profile-panel" style={{ "--profile-top": `${profileTop}px` } as CSSProperties}>
-                            <button className="profile-close" onClick={() => setActiveIndex(null)} aria-label="Close member profile">×</button>
-                            <div className="profile-photo">
-                                {active.photo ? (
-                                    <img className="profile-photo-img" src={active.photo} alt={active.name} />
-                                ) : (
-                                    <div className="portrait-placeholder">
-                                        <b>{initials(active.name)}</b>
-                                        <span>Portrait pending</span>
-                                    </div>
-                                )}
-                                <a className="profile-link" href={active.linkedin} target="_blank" rel="noreferrer" aria-label={`${active.name} on LinkedIn`}>
-                                    in
-                                </a>
-                                <a className="profile-mail" href={`mailto:${active.email}`} aria-label={`Email ${active.name}`}>
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                        <polyline points="22,6 12,13 2,6" />
-                                    </svg>
-                                </a>
-                                <div className="profile-description">
-                                    <span>Mission profile</span>
-                                    <p>{active.description || "Profile details will be added here."}</p>
-                                </div>
-                            </div>
-                            <div className="profile-info">
-                                <h3>{active.name}</h3>
-                                <p>{active.role}</p>
-                                <a className="profile-email" href={`mailto:${active.email}`}>
-                                    {active.email}
-                                </a>
-                            </div>
-                        </aside>
-                    )}
-                </div>
-
-                <div className="team-note">
-                    <p>Every successful launch is the sum of many disciplines moving in the same direction.</p>
-                    <span>Rocketry BMSCE · Team Directory</span>
-                </div>
-            </section>
-
-            {/* ── CTA ─────────────────────────────────────────────── */}
-            <section className="team-cta">
-                <h2>Build<br />With Us.</h2>
-                <div>
-                    <p>Want to help build the next flight system?</p>
-                    <a href="mailto:rocketry@bmsce.ac.in">Get in touch &rarr;</a>
-                </div>
-            </section>
-        </main>
-    );
+    return <main className="team-page">
+        <section className="team-hero"><span>01 / People behind the mission</span><div><h1>Meet<br />the<br />Team.</h1><p>A multidisciplinary team of engineers, designers and builders taking ambitious ideas from concept to flight.</p></div></section>
+        <section className="org-section" id="org" onMouseLeave={() => setOpenTeam(null)}><div className="org-section-header"><span>02 / Organization</span><div><h2>Org<br />Structure.</h2><p>Start at the mission root, then open only the leadership branch you want to explore.</p></div></div>
+            <div className="org-chart-wrap"><div className="org-chart-inner"><div className="org-tree-center"><OrgChartNode node={ORG} expanded={expandedNodes} toggle={toggleNode} desktop={desktop} openPreview={openTeam} setPreview={setOpenTeam} /></div></div></div>
+            {openTeam && <OrgTeamPanel team={TEAMS.find(team => team.id === openTeam)!} onClose={() => setOpenTeam(null)} />}
+            <div className="mobile-org-nav">
+                <div className="mobile-org-nav-head"><span>← Teams</span><p>Choose a subsystem to see its members.</p></div>
+                {TEAMS.map(team => {
+                    const active = openTeam === team.id;
+                    return <div className={`mobile-org-team${active ? " mobile-org-team--open" : ""}`} key={team.id}>
+                        <button type="button" className="mobile-org-team-button" onClick={() => { setOpenTeam(active ? null : team.id); setOpenMember(null); }}><span>👥</span><div><b>{team.name}</b><small>{team.members.length} team {team.members.length === 1 ? "member" : "members"}</small></div><i>{active ? "−" : "›"}</i></button>
+                        {active && <div className="mobile-org-members">{team.members.map(member => <div key={member.name}><button type="button" onClick={() => setOpenMember(member.name)}><span>👤</span><b>{member.name}</b><i>›</i></button>{openMember === member.name && <MemberProfile member={member} onClose={() => setOpenMember(null)} />}</div>)}</div>}
+                    </div>;
+                })}
+            </div>
+        </section>
+        <section className="team-directory-section" id="team"><div className="team-heading"><h2>Our<br />People.</h2><p>Choose a subsystem, then select a teammate to open their profile and portrait.</p></div>
+            <div className="team-groups">{TEAMS.map((team, index) => { const teamIsOpen = openTeam === team.id; return <section className={`team-group${teamIsOpen ? " team-group--open" : ""}`} key={team.id} onMouseLeave={() => setOpenMember(null)}>
+                <button type="button" className="team-group-header" onClick={() => toggleTeam(team.id)} aria-expanded={teamIsOpen}><div><span className="team-group-label">{String(index + 1).padStart(2, "0")} / Subsystem</span><span className="team-group-name">{team.name}</span></div><div className="team-group-right"><p className="team-group-desc">{team.description}</p><span className="team-group-count">{team.members.length} people</span><span className="team-group-toggle">{teamIsOpen ? "−" : "+"}</span></div></button>
+                {teamIsOpen && <div className="team-members-list">{team.members.map((member, memberIndex) => { const memberIsOpen = openMember === member.name; return <div className={`team-member${memberIsOpen ? " team-member--open" : ""}`} key={member.name}><button type="button" className="member-row" onMouseEnter={() => setOpenMember(member.name)} onClick={() => setOpenMember(memberIsOpen ? null : member.name)} aria-expanded={memberIsOpen}><span className="member-name"><i>{String(memberIndex + 1).padStart(2, "0")}</i>{member.name}</span><span className="member-role">{member.role}</span><span className="member-plus">{memberIsOpen ? "×" : "+"}</span></button>{memberIsOpen && <MemberProfile member={member} onClose={() => setOpenMember(null)} />}</div>; })}</div>}
+            </section>; })}</div>
+            <div className="team-note"><p>Every successful launch is the sum of many disciplines moving in the same direction.</p><span>Rocketry BMSCE · Team Directory</span></div>
+        </section>
+        <section className="team-cta"><h2>Build<br />With Us.</h2><div><p>Want to help build the next flight system?</p><a href="mailto:rocketry@bmsce.ac.in">Get in touch →</a></div></section>
+    </main>;
 }

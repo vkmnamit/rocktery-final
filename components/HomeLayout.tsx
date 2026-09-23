@@ -21,7 +21,9 @@ const cards = [
 export default function HomeLayout() {
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
+        const isPhone = window.matchMedia("(max-width: 650px)").matches;
         const ctx = gsap.context(() => {
+            if (isPhone) return;
             gsap.fromTo(
                 ".home-reference-wordmark .giant-text",
                 { x: () => -window.innerWidth * .55, opacity: 0.8 },

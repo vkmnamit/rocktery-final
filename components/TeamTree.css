@@ -1,0 +1,65 @@
+.on { position: relative; }
+.tree-member-popover { position: fixed; z-index: 80; top: 50%; left: 50%; width: max-content; max-width: min(680px, calc(100vw - 40px)); max-height: calc(100dvh - 40px); transform: translate(-50%, -50%); display: flex; gap: 8px; padding: 10px; background: var(--cream); border: 1px solid rgba(241,238,230,.65); box-shadow: 0 18px 44px rgba(0,0,0,.45); animation: tree-open .22s cubic-bezier(.16,1,.3,1) both; }
+.tree-member-preview { width: 150px; color: var(--ink); text-align: left; }
+.tree-member-preview img { display: block; width: 100%; height: 124px; object-fit: cover; background: #252525; }
+.tree-member-preview span { display: block; padding: 9px 3px 3px; }
+.tree-member-preview b { display: block; font-size: .78rem; line-height: 1.2; }
+.tree-member-preview small { display: block; margin-top: 4px; color: #77736d; font: .58rem/1.35 'DM Mono', monospace; text-transform: uppercase; }
+.tree-member-close { display: grid; place-items: center; position: absolute; z-index: 1; top: -14px; right: -14px; width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 50%; background: #fff; color: var(--ink); font-size: 1.35rem; cursor: pointer; }
+.member-profile-popover { position: fixed; z-index: 80; top: 50%; left: 50%; width: min(760px, calc(100vw - 48px)); max-height: calc(100dvh - 48px); transform: translate(-50%, -50%); overflow: auto; box-shadow: 0 24px 70px rgba(0,0,0,.32); }
+.member-profile-popover .member-profile-image { min-height: 360px; }
+.member-profile-close { position: absolute; z-index: 2; top: 15px; right: 15px; width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 50%; background: #fff; color: var(--ink); font-size: 1.7rem; cursor: pointer; }
+.org-team-panel { width: min(1200px, 100%); margin: 42px auto 0; padding: 0 3rem 3rem; color: var(--cream); animation: tree-open .3s cubic-bezier(.16,1,.3,1) both; }
+.org-team-panel-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; padding: 18px 0 22px; border-top: 1px solid rgba(241,238,230,.25); }
+.org-team-panel-head span, .org-member-card > div > span { display:block; color:rgba(241,238,230,.55); font:.65rem/1.4 'DM Mono',monospace; letter-spacing:.12em; text-transform:uppercase; }
+.org-team-panel-head h3 { margin: 7px 0 0; font-size: clamp(2rem,4vw,4rem); letter-spacing:-.07em; line-height:.9; }
+.org-team-panel-head button { width:42px; height:42px; border:1px solid rgba(241,238,230,.42); border-radius:50%; background:transparent; color:var(--cream); font-size:1.6rem; cursor:pointer; }
+.org-member-cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; }
+.org-member-card { display:grid; grid-template-columns:130px 1fr; gap:18px; padding:15px; background:var(--cream); color:var(--ink); min-height:235px; }
+.org-member-card > img { width:130px; height:100%; min-height:190px; object-fit:cover; background:#222; }
+.org-member-card > div { display:flex; flex-direction:column; align-items:flex-start; }
+.org-member-card > div > span { color:#77736d; }
+.org-member-card h4 { margin:9px 0; font-size:1.45rem; letter-spacing:-.06em; line-height:1; }
+.org-member-card p { margin:0; color:#55514b; font-size:.8rem; line-height:1.55; }
+.org-member-card nav { display:flex; gap:8px; margin-top:auto; padding-top:14px; }
+.org-member-card nav a { display:flex; align-items:center; gap:6px; color:var(--ink); font:.61rem/1 'DM Mono',monospace; letter-spacing:.06em; text-transform:uppercase; text-decoration:none; }
+.org-member-card nav strong { display:grid; place-items:center; width:22px; height:22px; border:1px solid #77736d; border-radius:50%; font:700 .7rem/1 Arial,sans-serif; }
+.mobile-org-nav { display: none; }
+@media (max-width: 700px) {
+  .team-hero h1, .org-section-header h2, .team-heading h2 { font-size: clamp(2.8rem, 11vw, 4.4rem); line-height: .86; letter-spacing: -.08em; overflow-wrap: anywhere; }
+  .org-chart-wrap, .org-team-panel { display: none; }
+  .mobile-org-nav { display: block; margin-top: 28px; }
+  .mobile-org-nav-head { padding: 0 0 18px; border-bottom: 1px solid rgba(241,238,230,.2); }
+  .mobile-org-nav-head span { font: .7rem/1 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .12em; }
+  .mobile-org-nav-head p { margin-top: 10px; color: rgba(241,238,230,.56); font-size: .86rem; }
+  .mobile-org-team { border-bottom: 1px solid rgba(241,238,230,.2); }
+  .mobile-org-team-button, .mobile-org-members > div > button { width: 100%; border: 0; background: transparent; color: var(--cream); text-align: left; cursor: pointer; }
+  .mobile-org-team-button { display: grid; grid-template-columns: 28px 1fr 20px; align-items: center; gap: 10px; padding: 19px 2px; }
+  .mobile-org-team-button > span { font-size: 1.05rem; filter: grayscale(1); }
+  .mobile-org-team-button b, .mobile-org-team-button small { display: block; }
+  .mobile-org-team-button b { font-size: 1.1rem; }
+  .mobile-org-team-button small { margin-top: 5px; color: rgba(241,238,230,.54); font: .62rem/1 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .09em; }
+  .mobile-org-team-button i, .mobile-org-members i { font: 1.4rem/1 Arial, sans-serif; font-style: normal; text-align: right; }
+  .mobile-org-members { padding: 0 0 15px; }
+  .mobile-org-members > div > button { display: grid; grid-template-columns: 25px 1fr 20px; align-items: center; gap: 8px; min-height: 56px; margin-top: 8px; padding: 0 13px; border: 1px solid rgba(241,238,230,.28); }
+  .mobile-org-members > div > button span { font-size: .9rem; filter: grayscale(1); }
+  .mobile-org-members > div > button b { font-size: .9rem; }
+  .tree-member-popover { position: fixed; z-index: 80; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; transform: none; margin: 0; padding: 76px 7vw 28px; flex-direction: column; justify-content: center; overflow-y: auto; background: var(--cream); border: 0; }
+  .tree-member-preview { width: 100%; max-width: 390px; margin: 0 auto; display: grid; grid-template-columns: 110px 1fr; gap: 16px; align-items: center; }
+  .tree-member-preview img { height: 132px; }
+  .tree-member-preview span { padding: 0; }
+  .tree-member-preview b { font-size: 1.15rem; }
+  .tree-member-preview small { font-size: .68rem; }
+  .tree-member-close { position: fixed; top: 20px; right: 6vw; width: 44px; height: 44px; font-size: 1.75rem; }
+  .member-profile-popover { inset: auto; top: 50%; left: 50%; width: calc(100vw - 32px); height: auto; max-height: calc(100dvh - 32px); transform: translate(-50%, -50%); padding: 16px; grid-template-columns: 1fr; overflow: hidden; border: 1px solid var(--line); background: var(--cream); }
+  .member-profile-popover .member-profile-image { min-height: 0; height: min(34vh, 260px); }
+  .member-profile-popover .member-profile-copy h4 { margin: 8px 0; font-size: 2rem; }
+  .member-profile-popover .member-profile-copy p { display: -webkit-box; overflow: hidden; margin: 0; -webkit-box-orient: vertical; -webkit-line-clamp: 3; font-size: .84rem; line-height: 1.45; }
+  .member-profile-popover .member-profile-copy div { margin-top: 12px; }
+  .member-profile-close { position: absolute; top: 27px; right: 27px; }
+  .org-team-panel { margin-top:28px; padding:0 0 30px; }
+  .org-team-panel-head { padding-left:0; }
+  .org-member-cards { grid-template-columns:1fr; }
+  .org-member-card { grid-template-columns:105px 1fr; min-height:0; }
+  .org-member-card > img { width:105px; min-height:160px; }
+}
